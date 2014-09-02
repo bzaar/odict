@@ -64,8 +64,9 @@
     <Reference Include="Microsoft.WindowsAzure.Storage">
       <HintPath>..\..\..\..\..\..\..\..\NugetPackages\WindowsAzure.Storage.2.1.0.4\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Slepov.Russian">
-      <HintPath>..\..\Accentizer2\Zalizniak.FormGenerator\bin\Release\Slepov.Russian.dll</HintPath>
+    <Reference Include="Slepov.Russian, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dependencies\Slepov.Russian.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -81,14 +82,17 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Zalizniak">
-      <HintPath>..\..\Accentizer2\Zalizniak.FormGenerator\bin\Release\Zalizniak.dll</HintPath>
+    <Reference Include="Zalizniak, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dependencies\Zalizniak.dll</HintPath>
     </Reference>
-    <Reference Include="Zalizniak.FormGenerator">
-      <HintPath>..\..\Accentizer2\Zalizniak.FormGenerator\bin\Release\Zalizniak.FormGenerator.dll</HintPath>
+    <Reference Include="Zalizniak.FormGenerator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dependencies\Zalizniak.FormGenerator.dll</HintPath>
     </Reference>
-    <Reference Include="ZalizniakParser">
-      <HintPath>..\..\Accentizer2\Zalizniak.FormGenerator\bin\Release\ZalizniakParser.dll</HintPath>
+    <Reference Include="ZalizniakParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dependencies\ZalizniakParser.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -101,7 +105,6 @@
     <Content Include="structure\Default.aspx" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
-    <Content Include="Test.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -165,13 +168,6 @@
     </Compile>
     <Compile Include="structure\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Test.aspx.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Test.aspx.designer.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
