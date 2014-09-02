@@ -34,3 +34,13 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+odict.ru/bin
+odict.ru/obj
+_ReSharper.ODict
+odict.ru/Web.Debug.config
+odict.ru/Web.Release.config
+XMLFile1.xml
+odict.ru/odict.ru.Publish.xml
+odict.ru/download/odict.zip
+DawgBuilder
