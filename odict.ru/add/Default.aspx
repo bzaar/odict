@@ -14,6 +14,7 @@
         }
         .block
         {
+            float: left;
         }
     </style>
     <script type="text/javascript">
@@ -76,7 +77,7 @@
         MinimumPrefixLength="1"
         OnClientItemSelected="clickButton1" />
 
-    <div class="block">
+    <div style="clear: both">
         <asp:UpdatePanel ID="FormsPanel" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
             <ContentTemplate>
                 <p>
