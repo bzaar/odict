@@ -26,8 +26,7 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
-
+Icon
 # Thumbnails
 ._*
 
@@ -44,3 +43,6 @@ XMLFile1.xml
 odict.ru/odict.ru.Publish.xml
 odict.ru/download/odict.zip
 DawgBuilder
+packages
+ODict.suo
+odict.ru/odict.ru.csproj.user
