@@ -4,7 +4,7 @@
     <title>Add new word to the dictionary</title>
     <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="/Styles/autosuggest.css" rel="stylesheet" />
-    <script src="Scripts/autosuggest2.js"></script>
+    <script src="../Scripts/autosuggest2.js"></script>
 </head>
 <body>
     <script type="text/javascript">
@@ -15,7 +15,6 @@
 
             return xmlhttp;
         }
-
         function wordSuggestions() {
         }
 
@@ -114,7 +113,8 @@
         function onloadpage() {
             lemmaTextbox = new AutoSuggestControl(document.getElementById("lemma"), new wordSuggestions(), selectWord);
         }
-        window.onload = onloadpage;
+    //    window.onload = onloadpage;
+        addLoadEvent(onloadpage);
 
         function selectWord() {
             getRules(document.getElementById("lemma").value.trim());
@@ -168,13 +168,9 @@
             <div class="leftpane">
                 <div>
                     <input type="text" id="lemma" />
-                    <input class="stessButton" type="button" value="'" id="insertStressMark" />
+                    <input class="stressButton" type="button" value="'" id="insertStressMark" />
                 </div>
                 <div>
-                    <p>
-                        <span id="line"></span>
-                    </p>
-                    <div id="forms"></div>
                 </div>
             </div>
             <div class="rightpane">

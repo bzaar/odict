@@ -108,11 +108,12 @@
   <ItemGroup>
     <Content Include="Add.html" />
     <Content Include="add\Default.aspx" />
+    <Content Include="add\Legacy.aspx" />
     <Content Include="add\DictionaryService.asmx" />
     <Content Include="add\help\Default.aspx" />
     <Content Include="download\Default.aspx" />
     <Content Include="dict.dawg" />
-    <Content Include="Api.ashx" />
+    <Content Include="add\Api.ashx" />
     <None Include="EmailTemplate.htm" />
     <Content Include="pomety\Default.aspx" />
     <Content Include="Scripts\autosuggest2.js" />
@@ -139,8 +140,17 @@
     <Compile Include="add\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Api.ashx.cs">
+    <Compile Include="add\DictionaryHelper.cs" />
+    <Compile Include="add\Legacy.aspx.cs">
+      <DependentUpon>Legacy.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="add\Legacy.aspx.designer.cs">
+      <DependentUpon>Legacy.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="add\Api.ashx.cs">
       <DependentUpon>Api.ashx</DependentUpon>
+    </Compile>
     <Compile Include="add\help\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

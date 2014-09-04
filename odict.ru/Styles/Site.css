@@ -329,3 +329,12 @@ div.accountInfo
 {
     width:380px;
 }
+.lemma-textbox
+{
+    margin: 0px;
+    padding: 0px;
+}
+.block
+{
+    float: left;
+}

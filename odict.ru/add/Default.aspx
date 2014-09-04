@@ -6,103 +6,179 @@
     Inherits="odict.ru.add.Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
-        .lemma-textbox
-        {
-            margin: 0px;
-            padding: 0px;
-        }
-        .block
-        {
-            float: left;
-        }
-    </style>
+    <link href="/Styles/autosuggest.css" rel="stylesheet" />
+    <script src="../Scripts/autosuggest2.js"></script>
     <script type="text/javascript">
-        var lastLemmaValue = undefined;
-        function clickButton1() {
-            var lemmaValue = document.getElementById('<%= LemmaTextBox.ClientID %>').value.trim();
+        function getxmlhttp() {
+            var xmlhttp;
+            if (window.XMLHttpRequest) { xmlhttp = new XMLHttpRequest(); }
+            else { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
 
-            if (lastLemmaValue !== lemmaValue) {
-                lastLemmaValue = lemmaValue;
-                __doPostBack('<%= LemmaTextBox.ClientID %>', '');
-            }
+            return xmlhttp;
         }
-        function insertAtCursor(myField, myValue) {
-            //IE support
-            if (document.selection) {
-                myField.focus();
-                sel = document.selection.createRange();
-                sel.text = myValue;
-            }
-            //MOZILLA and others
-            else if (myField.selectionStart || myField.selectionStart == '0') {
-                var startPos = myField.selectionStart;
-                var endPos = myField.selectionEnd;
-                myField.value = myField.value.substring(0, startPos)
-            + myValue
-            + myField.value.substring(endPos, myField.value.length);
-                myField.selectionStart = startPos + myValue.length;
-                myField.selectionEnd = startPos + myValue.length;
-            } else {
-                myField.value += myValue;
-            }
+
+        function wordSuggestions() {
         }
-        function InsertStressMark() {
-            insertAtCursor('<%= LemmaTextBox.ClientID %>', '');
+
+        var words = [];
+
+        wordSuggestions.prototype.requestSuggestions = function (oAutoSuggestControl /*:AutoSuggestControl*/,
+                                                                 bTypeAhead /*:boolean*/) {
+
+            clearLineForms();
+
+            var lemmaText = document.getElementById("lemma").value.trim().replace("*", "");
+
+            getRules(lemmaText);
+
+            var aSuggestions = [];
+
+            if (lemmaText.length === 0) {
+                words = [];
+                oAutoSuggestControl.autosuggest(aSuggestions, false);
+                return;
+            }
+
+            var xmlhttp = getxmlhttp();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        words = JSON.parse(xmlhttp.responseText).d;
+
+                        var sTextboxValue = oAutoSuggestControl.textbox.value.replace("*", "");
+
+                        if (sTextboxValue.length > 0) {
+
+                            //search for matching states
+                            for (var i = 0; i < words.length; i++) {
+                                if (words[i].toLowerCase().indexOf(sTextboxValue.toLowerCase()) == 0) {
+                                    aSuggestions.push(words[i]);
+                                }
+                            }
+                        }
+
+                        //if (aSuggestions.length === 1 && aSuggestions[0].toLowerCase() === sTextboxValue.toLowerCase()) {
+                        //    aSuggestions.pop();
+                        //}
+
+                        //provide suggestions to the control
+                        oAutoSuggestControl.autosuggest(aSuggestions, false);
+                    }
+                    else {
+                        words = [];
+                    }
+                }
+            }
+
+            xmlhttp.open("POST", "/add/DictionaryService.asmx/GetCompletionList", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(JSON.stringify({ prefixText: lemmaText, count: 10 }));
+        }
+
+        var rulesRequest = null;
+        function getRules(prefix) {
+            var rulesElement = document.getElementById("rules");
+            rulesElement.length = 0;
+
+            if (rulesRequest !== null) {
+                rulesRequest.abort();
+                rulesRequest = null;
+            }
+
+            if (!prefix) {
+                return;
+            }
+
+            var xmlhttp = getxmlhttp();
+            rulesRequest = xmlhttp;
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        rulesArray = JSON.parse(xmlhttp.responseText);
+                        for (var ruleIndex = 0; ruleIndex < rulesArray.length; ruleIndex++) {
+                            var newRule = document.createElement("option");
+                            newRule.text = rulesArray[ruleIndex];
+                            rulesElement.add(newRule);
+                        }
+                    }
+                    rulesRequest = null;
+                }
+            }
+
+            xmlhttp.open("GET", "/api?action=getrules&prefixtext=" + prefix, true);
+            xmlhttp.send();
+        }
+
+        var lemmaTextbox;
+        function onloadpage() {
+            var lemmaElement = document.getElementById("lemma");
+            lemmaElement.focus();
+            lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord);
+        }
+        window.onload = onloadpage;
+
+        function selectWord() {
+            getRules(document.getElementById("lemma").value.trim());
+        }
+
+        function clearLineForms() {
+            document.getElementById("line").innerHTML = "";
+            document.getElementById("forms").innerHTML = "";
+        }
+
+        function getLineForms() {
+            clearLineForms();
+            var lineElement = document.getElementById("line");
+            var formsElement = document.getElementById("forms");
+
+            var lemmaValue = document.getElementById("lemma").value;
+            var ruleElement = document.getElementById("rules");
+
+            if (!lemmaValue || !ruleElement.value) {
+                return;
+            }
+
+            var ruleValue = ruleElement.value;//ruleElement.options[ruleElement.selectedIndex].value;
+
+            var xmlhttp = getxmlhttp();
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        lineForms = JSON.parse(xmlhttp.responseText);
+                        lineElement.innerHTML = lineForms.Line;
+                        var formsHTML = "";
+                        for (var formIndex = 0; formIndex < lineForms.Forms.length; formIndex++) {
+                            formsHTML += "<span>" + lineForms.Forms[formIndex] + "</span>" + (formIndex !== (lineForms.Forms.length - 1) ? "<br/>" : "");
+                        }
+                        formsElement.innerHTML = formsHTML;
+                    }
+                }
+            }
+
+            xmlhttp.open("GET", "/api?action=getforms&lemma=" + lemmaValue + "&rule=" + ruleElement.value, true);
+            xmlhttp.send();
+        }
+
+        function selectRule() {
+            getLineForms();
         }
     </script>
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-
-    <ajaxToolkit:ToolkitScriptManager runat="server" ID="ScriptManager1" />
-
     <div class="block">
-        <asp:TextBox runat="server" onkeyup="clickButton1()" onpaste="clickButton1()" ID="LemmaTextBox" CssClass="lemma-textbox" />
-        <asp:Button runat="server" Text="'" onclik="insertAtCursor();" />
+        <input type="text" id="lemma" class="lemma-textbox" />
+        <input class="stressButton" type="button" value="'" id="insertStressMark" />
     </div>
-
     <div class="block">
-        <asp:UpdatePanel runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
-            <ContentTemplate>
-                <asp:ListBox ID="ModelsListBox" runat="server" AutoPostBack="true" />
-            </ContentTemplate>
-            <Triggers>
-                <asp:AsyncPostBackTrigger EventName="TextChanged" ControlID="LemmaTextBox" />
-            </Triggers>
-        </asp:UpdatePanel>
+        <select id="rules" class="ruleslist" onchange="selectRule()" size="2"></select>
     </div>
-
-    <ajaxToolkit:AutoCompleteExtender 
-        ID="AutoCompleteExtender1" 
-        runat="server" 
-        TargetControlID="LemmaTextBox" 
-        ServiceMethod="GetCompletionList" 
-        ServicePath="DictionaryService.asmx" 
-        CompletionInterval="100" 
-        MinimumPrefixLength="1"
-        OnClientItemSelected="clickButton1" />
-
-    <div style="clear: both">
-        <asp:UpdatePanel ID="FormsPanel" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="false">
-            <ContentTemplate>
-                <p>
-                    <asp:Label runat="server" ID="LineLabel" />
-                </p>
-                <asp:Literal ID="FormsLiteral" runat="server"/>
-            </ContentTemplate>
-            <Triggers>
-                <asp:AsyncPostBackTrigger EventName="TextChanged" ControlID="LemmaTextBox" />
-                <asp:AsyncPostBackTrigger EventName="TextChanged" ControlID="ModelsListBox" />
-            </Triggers>
-        </asp:UpdatePanel>
+    <div class="clearblock">
+        <p>
+            <span id="line"></span>
+        </p>
+        <div id="forms"></div>
     </div>
-
-
-    <script type="text/javascript" language='javascript'>
-        var tempval = document.getElementById('<%=LemmaTextBox.ClientID%>');
-        tempval.select();
-    </script>
-
-    
 </asp:Content>

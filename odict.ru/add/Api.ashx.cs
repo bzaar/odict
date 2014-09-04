@@ -9,7 +9,7 @@ using System.IO;
 using DawgSharp;
 using Zalizniak;
 
-namespace odict.ru
+namespace odict.ru.add
 {
     /// <summary>
     /// Summary description for Api
@@ -34,11 +34,11 @@ namespace odict.ru
         
         protected void GetForms(string lemma, string rule)
         {            
-            int StressPos = lemma.Trim().IndexOf('*');
+            int StressPos = lemma.Trim().IndexOf(DictionaryHelper.StressMark);
 
             string GramInfo = rule.Substring(0, rule.IndexOf("="));
 
-            string Line = lemma.Replace("*", String.Empty).ToLowerInvariant() + " " + 
+            string Line = DictionaryHelper.RemoveStressMarks(lemma).ToLowerInvariant() + " " + 
                 (StressPos == -1 ? "?" : StressPos.ToString()) + " " + GramInfo.Substring(GramInfo.IndexOf(' '));
 
             WriteJSONToResponse(new LineForms()
@@ -51,7 +51,7 @@ namespace odict.ru
 
         protected void GetRules(string prefixText)
         {
-            string PrefixText = prefixText.Replace("*", String.Empty);
+            string PrefixText = DictionaryHelper.RemoveStressMarks(prefixText);
 
             Dawg<string> Dawg = Dawg<string>.Load(new MemoryStream(Resources.zalizniak), 
                 Func => 

@@ -25,7 +25,7 @@ namespace odict.ru
         {
             var dict = DawgSharp.Dawg<bool>.Load (new MemoryStream (Resources.dict), r => r.ReadBoolean ());
 
-            return dict.MatchPrefix (Default.RemoveStressMarks (prefixText)).Take (10).Select (kvp => kvp.Key).ToArray ();
+            return dict.MatchPrefix (DictionaryHelper.RemoveStressMarks(prefixText)).Take (10).Select (kvp => kvp.Key).ToArray ();
         }
     }
 }
