@@ -10,6 +10,11 @@ namespace odict.ru.add
 {
     public partial class Default : Page
     {
+        protected void Page_Init(object sender, EventArgs e)
+        {
+
+        }   
+     
         protected void Page_Load(object sender, EventArgs e)
         {
             string trimmedLemma = this.LemmaTextBox.Text.Trim ();
@@ -39,6 +44,9 @@ namespace odict.ru.add
             }
             else
             {
+                this.LineLabel.Text = String.Empty;
+                this.FormsLiteral.Text = String.Empty;
+
                 this.ModelsListBox.Visible = lemma.Length > 1;
 
                 if (this.ModelsListBox.Visible)
@@ -54,14 +62,14 @@ namespace odict.ru.add
                         .Take (10)
                         .ToArray ();
 
-                    this.ModelsListBox.Items.Clear ();
-
-                    this.ModelsListBox.Rows = matches.Length;
-
+                    this.ModelsListBox.Items.Clear();
+                    
                     foreach (var match in matches)
                     {
                         this.ModelsListBox.Items.Add (match);
                     }
+                    
+                    this.ModelsListBox.Rows = Math.Max(this.ModelsListBox.Items.Count, 2);
                 }
             }
         }

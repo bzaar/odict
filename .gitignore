@@ -44,5 +44,7 @@ odict.ru/odict.ru.Publish.xml
 odict.ru/download/odict.zip
 DawgBuilder
 packages
-ODict.suo
+*.suo
 odict.ru/odict.ru.csproj.user
+odict.ru/Properties/PublishProfiles
+upgradelog.htm

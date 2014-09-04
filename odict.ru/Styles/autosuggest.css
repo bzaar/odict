@@ -1,0 +1,18 @@
+div.suggestions {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    position: fixed;   
+    margin-top:10px;
+}
+
+div.suggestions div {
+    cursor: default;
+    background:#eee;
+    padding:5px;
+}
+
+div.suggestions div.current {
+    background-color:#09f;
+    color: white;
+}

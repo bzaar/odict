@@ -296,3 +296,36 @@ div.accountInfo
     padding-right: 10px;
 }
 
+/* LAYOUT
+----------------------------------------------------------*/
+.center 
+{
+    margin-left:50%;
+}
+.centerpane
+{
+    margin-top:20px;
+    margin-left:-300px;
+    width:600px;
+}
+.stressButton
+{
+    margin-left:10px;
+}
+.leftpane
+{
+    float:left;
+}
+.rightpane
+{
+    margin-left:10px;
+    float:left;
+}
+.clearblock
+{
+    clear:both;
+}
+.ruleslist 
+{
+    width:380px;
+}

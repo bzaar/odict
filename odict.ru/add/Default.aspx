@@ -18,8 +18,14 @@
         }
     </style>
     <script type="text/javascript">
+        var lastLemmaValue = undefined;
         function clickButton1() {
-            __doPostBack('<%= LemmaTextBox.ClientID %>', '');
+            var lemmaValue = document.getElementById('<%= LemmaTextBox.ClientID %>').value.trim();
+
+            if (lastLemmaValue !== lemmaValue) {
+                lastLemmaValue = lemmaValue;
+                __doPostBack('<%= LemmaTextBox.ClientID %>', '');
+            }
         }
         function insertAtCursor(myField, myValue) {
             //IE support
@@ -52,7 +58,7 @@
     <ajaxToolkit:ToolkitScriptManager runat="server" ID="ScriptManager1" />
 
     <div class="block">
-        <asp:TextBox runat="server" onkeyup="clickButton1();"  ID="LemmaTextBox" CssClass="lemma-textbox" />
+        <asp:TextBox runat="server" onkeyup="clickButton1()" onpaste="clickButton1()" ID="LemmaTextBox" CssClass="lemma-textbox" />
         <asp:Button runat="server" Text="'" onclik="insertAtCursor();" />
     </div>
 
