@@ -41,11 +41,21 @@ namespace odict.ru.add
             string Line = DictionaryHelper.RemoveStressMarks(lemma).ToLowerInvariant() + " " + 
                 (StressPos == -1 ? "?" : StressPos.ToString()) + " " + GramInfo.Substring(GramInfo.IndexOf(' '));
 
+            string[] Forms;
+            try 
+            {
+                Forms = FormGenerator.GetAccentedForms(Line, delegate { })
+                    .Select(Func => HttpUtility.HtmlEncode(Func.AccentedForm)).ToArray();
+            }
+            catch
+            {
+                Forms = new string[] { };
+            }
+
             WriteJSONToResponse(new LineForms()
                 {
                     Line = Line,
-                    Forms = FormGenerator.GetAccentedForms(Line, delegate { })
-                        .Select(Func => HttpUtility.HtmlEncode(Func.AccentedForm)).ToArray()
+                    Forms = Forms
                 });
         }
 
