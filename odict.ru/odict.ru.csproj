@@ -109,6 +109,7 @@
     <Content Include="Add.html" />
     <Content Include="add\Default.aspx" />
     <Content Include="add\DictionaryService.asmx" />
+    <Content Include="add\help\Default.aspx" />
     <Content Include="download\Default.aspx" />
     <Content Include="dict.dawg" />
     <Content Include="Api.ashx" />
@@ -140,6 +141,12 @@
     </Compile>
     <Compile Include="Api.ashx.cs">
       <DependentUpon>Api.ashx</DependentUpon>
+    <Compile Include="add\help\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="add\help\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -206,6 +213,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
