@@ -338,3 +338,7 @@ div.accountInfo
 {
     float: left;
 }
+.lmargin10px
+{
+    margin-left:10px;
+}

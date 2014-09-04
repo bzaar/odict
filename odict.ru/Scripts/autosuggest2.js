@@ -26,7 +26,6 @@ function AutoSuggestControl(oTextbox /*:HTMLInputElement*/,
      * @scope private.
      */
     this.provider /*:SuggestionProvider*/ = oProvider;
-    
     /**
      * The textbox to capture.
      * @scope private
@@ -139,7 +138,6 @@ AutoSuggestControl.prototype.getTop = function () /*:int*/ {
  * @param oEvent The event object for the keydown event.
  */
 AutoSuggestControl.prototype.handleKeyDown = function (oEvent /*:Event*/) {
-
     switch(oEvent.keyCode) {
         case 38: //up arrow
             this.previousSuggestion();
@@ -170,8 +168,9 @@ AutoSuggestControl.prototype.handleKeyUp = function (oEvent /*:Event*/) {
     if (iKeyCode == 8 || iKeyCode == 46) {
         this.provider.requestSuggestions(this, false);
         
-    //make sure not to interfere with non-character keys
-    } else if (iKeyCode < 32 || (iKeyCode >= 33 && iKeyCode < 46) || (iKeyCode >= 112 && iKeyCode <= 123)) {
+        //make sure not to interfere with non-character keys
+        // android devices see cyrillic symbols with 0 code
+    } else if ((iKeyCode > 0 && iKeyCode < 32) || (iKeyCode >= 33 && iKeyCode < 46) || (iKeyCode >= 112 && iKeyCode <= 123)) {
         //ignore
     } else {
         //request suggestions from the suggestion provider with typeahead

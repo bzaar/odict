@@ -20,11 +20,15 @@
         function wordSuggestions() {
         }
 
+        //function writeToConsole(text) {
+        //    document.getElementById("console").innerHTML += "<span>[" + (new Date()).toISOString().substr(0, 19).replace("T", " ") + "] " + text + "</span><br />";
+        //}
+
         var words = [];
 
         wordSuggestions.prototype.requestSuggestions = function (oAutoSuggestControl /*:AutoSuggestControl*/,
                                                                  bTypeAhead /*:boolean*/) {
-
+//            writeToConsole("requestSuggestions()");
             clearLineForms();
 
             var lemmaText = document.getElementById("lemma").value.trim().replace("*", "");
@@ -45,6 +49,7 @@
                 if (xmlhttp.readyState == 4) {
                     if (xmlhttp.status == 200) {
                         words = JSON.parse(xmlhttp.responseText).d;
+                        //writeToConsole("suggestionsText: " + xmlhttp.responseText);
 
                         var sTextboxValue = oAutoSuggestControl.textbox.value.replace("*", "");
 
@@ -78,6 +83,8 @@
 
         var rulesRequest = null;
         function getRules(prefix) {
+            //writeToConsole("getRules()");
+
             var rulesElement = document.getElementById("rules");
             rulesElement.length = 0;
 
@@ -87,6 +94,7 @@
             }
 
             if (!prefix) {
+                rulesElement.style.display = "none";
                 return;
             }
 
@@ -103,6 +111,13 @@
                             rulesElement.add(newRule);
                         }
                     }
+                    if (rulesElement.length > 0) {
+                        rulesElement.style.display = "block";
+                        rulesElement.size = Math.max(rulesElement.length, 2);
+                    }
+                    else {
+                        rulesElement.style.display = "none";
+                    }
                     rulesRequest = null;
                 }
             }
@@ -113,9 +128,11 @@
 
         var lemmaTextbox;
         function onloadpage() {
+            //writeToConsole(navigator.appVersion);
             var lemmaElement = document.getElementById("lemma");
             lemmaElement.focus();
-            lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord);
+            document.getElementById("rules").style.display = "none";
+            lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord);//, writeToConsole);
         }
         window.onload = onloadpage;
 
@@ -170,9 +187,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="block">
         <input type="text" id="lemma" class="lemma-textbox" />
-        <input class="stressButton" type="button" value="'" id="insertStressMark" />
     </div>
-    <div class="block">
+    <div class="block lmargin10px">
         <select id="rules" class="ruleslist" onchange="selectRule()" size="2"></select>
     </div>
     <div class="clearblock">
@@ -181,4 +197,6 @@
         </p>
         <div id="forms"></div>
     </div>
+<%--    <div id="console" style="color:red;font-size:small">  
+    </div>--%>
 </asp:Content>

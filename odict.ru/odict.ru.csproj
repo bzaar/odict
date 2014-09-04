@@ -106,7 +106,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Add.html" />
     <Content Include="add\Default.aspx" />
     <Content Include="add\Legacy.aspx" />
     <Content Include="add\DictionaryService.asmx" />
