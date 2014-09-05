@@ -47,3 +47,5 @@ packages
 odict.ru/odict.ru.csproj.user
 odict.ru/Properties/PublishProfiles
 upgradelog.htm
+DawgBuilder/bin
+DawgBuilder/obj
