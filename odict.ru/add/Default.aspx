@@ -31,7 +31,7 @@
 //            writeToConsole("requestSuggestions()");
             clearLineForms();
 
-            var lemmaText = document.getElementById("lemma").value.trim().replace("*", "");
+            var lemmaText = document.getElementById("<%= lemma.ClientID %>").value.trim().replace("*", "");
 
             getRules(lemmaText);
 
@@ -84,6 +84,7 @@
         var rulesRequest = null;
         function getRules(prefix) {
             //writeToConsole("getRules()");
+            document.getElementById("<%= selectedRule.ClientID %>").value = "";
 
             var rulesElement = document.getElementById("rules");
             rulesElement.length = 0;
@@ -129,15 +130,16 @@
         var lemmaTextbox;
         function onloadpage() {
             //writeToConsole(navigator.appVersion);
-            var lemmaElement = document.getElementById("lemma");
+            var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
             lemmaElement.focus();
-            document.getElementById("rules").style.display = "none";
-            lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord);//, writeToConsole);
+            var rulesElement = document.getElementById("rules");
+            rulesElement.style.display = "none";
+            lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord, rulesElement);//, writeToConsole);
         }
         window.onload = onloadpage;
 
         function selectWord() {
-            getRules(document.getElementById("lemma").value.trim());
+            getRules(document.getElementById("<%= lemma.ClientID %>").value.trim());
         }
 
         function clearLineForms() {
@@ -150,7 +152,7 @@
             var lineElement = document.getElementById("line");
             var formsElement = document.getElementById("forms");
 
-            var lemmaValue = document.getElementById("lemma").value;
+            var lemmaValue = document.getElementById("<%= lemma.ClientID %>").value;
             var ruleElement = document.getElementById("rules");
 
             if (!lemmaValue || !ruleElement.value) {
@@ -180,16 +182,25 @@
         }
 
         function selectRule() {
+            document.getElementById("<%= selectedRule.ClientID %>").value = document.getElementById("rules").value;
             getLineForms();
+        }
+        function focusRule() {
+            var rulesElement = document.getElementById("rules");
+            if (rulesElement.length > 0 && rulesElement.selectedIndex === -1) {
+                rulesElement.selectedIndex = 0;
+                selectRule();
+            }
         }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="block">
-        <input type="text" id="lemma" class="lemma-textbox" />
+        <asp:TextBox ID="lemma" CssClass="lemma-textbox" runat="server" />
+        <asp:HiddenField ID="selectedRule" runat="server" />
     </div>
     <div class="block lmargin10px">
-        <select id="rules" class="ruleslist" onchange="selectRule()" size="2"></select>
+        <select id="rules" class="ruleslist" onchange="selectRule()" onfocus="focusRule()" size="2"></select>        
     </div>
     <div class="clearblock">
         <p>

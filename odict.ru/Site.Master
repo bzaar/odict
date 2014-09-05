@@ -24,7 +24,7 @@
     </asp:ContentPlaceHolder>
 </head>
 <body>
-    <form runat="server">
+    <form autocomplete="off" runat="server">
         <div class="page">
             <div class="main">
                 <asp:ContentPlaceHolder ID="MainContent" runat="server"/>

@@ -6,9 +6,11 @@
  */
 function AutoSuggestControl(oTextbox /*:HTMLInputElement*/, 
                             oProvider /*:SuggestionProvider*/,
-                            onEnter) {
+                            onChange,
+                            oNextControl) {
     
-    this.onEnter = onEnter;
+    this.onChange = onChange;
+    this.oNextControl = oNextControl;
     /**
      * The currently selected suggestions.
      * @scope private
@@ -83,7 +85,7 @@ AutoSuggestControl.prototype.createDropDown = function () {
 
         if (oEvent.type == "mousedown") {
             oThis.textbox.value = oTarget.firstChild.nodeValue;
-            oThis.onEnter();
+            oThis.onChange();
             oThis.hideSuggestions();
         } else if (oEvent.type == "mouseover") {
             oThis.highlightSuggestion(oTarget);
@@ -146,8 +148,10 @@ AutoSuggestControl.prototype.handleKeyDown = function (oEvent /*:Event*/) {
             this.nextSuggestion();
             break;
         case 13: //enter
-            this.onEnter();
-            this.hideSuggestions();
+            //this.hideSuggestions();
+            if (this.oNextControl) {
+                this.oNextControl.focus();
+            }
             break;
         case 27:
             this.hideSuggestions();
@@ -184,7 +188,7 @@ AutoSuggestControl.prototype.handleKeyUp = function (oEvent /*:Event*/) {
  */
 AutoSuggestControl.prototype.hideSuggestions = function () {
     this.layer.style.visibility = "hidden";
-    this.textbox.focus();
+    //this.textbox.focus();
 };
 
 /**
@@ -214,8 +218,11 @@ AutoSuggestControl.prototype.init = function () {
     //save a reference to this object
     var oThis = this;
     
+    this.textbox.oncut = function (oEvent) {
+        oThis.onChange();
+    };
     this.textbox.onpaste = function (oEvent) {
-        oThis.onEnter();
+        oThis.onChange();
     };
 
     //assign the onkeyup event handler
@@ -262,7 +269,8 @@ AutoSuggestControl.prototype.nextSuggestion = function () {
     if (cSuggestionNodes.length > 0 && this.cur < cSuggestionNodes.length-1) {
         var oNode = cSuggestionNodes[++this.cur];
         this.highlightSuggestion(oNode);
-        this.textbox.value = oNode.firstChild.nodeValue; 
+        this.textbox.value = oNode.firstChild.nodeValue;
+        this.onChange();
     }
 };
 
@@ -278,6 +286,7 @@ AutoSuggestControl.prototype.previousSuggestion = function () {
         var oNode = cSuggestionNodes[--this.cur];
         this.highlightSuggestion(oNode);
         this.textbox.value = oNode.firstChild.nodeValue;   
+        this.onChange();
     }
 };
 
