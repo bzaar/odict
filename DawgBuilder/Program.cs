@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,34 +9,104 @@ namespace DawgBuilder
 {
     class Program
     {
-        static void Main()
-        {
-            BuildDictForSearch ();
+        private static string DictionaryForSearchFileName = "DictSearch.dawg";
+        private static string ModelsFileName = "DictModels.dawg";
 
-            BuildModels ();
+        private static void WriteToLog(StreamWriter writer, string text)
+        {
+            writer.WriteLine("[{0}] {1}", DateTime.Now, text);
+            writer.Flush();
         }
 
-        private static void BuildModels ()
-        {
-            var dict = new DawgBuilder <string> ();
+        static void Main(string[] args)
+        {            
+            string LogFileName = Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, ".log");
+            StreamWriter Logger = new StreamWriter(new FileStream(LogFileName, FileMode.Append, FileAccess.Write));
 
-            foreach (var entry in GetZalizniak ())
+            if (args.Length < 2)
             {
-                string lemma = entry.Key;
-
-                dict.Insert (lemma.Reverse(), entry.Value);
+                WriteToLog(Logger, "Not enought parameters!");
+                Logger.Close();
+                return;
             }
 
-            var dawg = dict.BuildDawg ();
+            string InputFileName = args[0];
+            string OutputDirectory = args[1];
 
-            dawg.SaveTo (File.Create (@"..\..\..\odict.ru\zalizniak.dawg"), (w, payload) => w.Write (payload ?? ""));
+            IEnumerable<KeyValuePair<string, string>> Zalizniak = null;
+            try
+            {
+                Zalizniak = GetZalizniak(InputFileName);
+            }
+            catch (Exception exp)
+            {
+                WriteToLog(Logger, "Couldn't got Zalizniak! Message: " + exp.Message);
+                Logger.Close();
+                return;
+            }
+
+            string DictSearchOutputFileName = OutputDirectory + "\\" + DictionaryForSearchFileName;
+            WriteToLog(Logger, "Starting to build dictionary for search -> " + DictSearchOutputFileName);
+            bool ErrorBuildForSearch = false;
+            try
+            {
+                BuildDictForSearch(Zalizniak, DictSearchOutputFileName);
+            }
+            catch (Exception exp)
+            {
+                WriteToLog(Logger, "Couldn't build dictionary for search! Message: " + exp.Message);
+                ErrorBuildForSearch = true;
+            } 
+
+            if (!ErrorBuildForSearch)
+            {
+                WriteToLog(Logger, "Dictionary for search had built successfully.");
+            }
+
+            string ModelsOutputFileName = OutputDirectory + "\\" + ModelsFileName;
+            WriteToLog(Logger, "Starting to build models -> " + ModelsOutputFileName);
+            bool ErrorBuildModels = false;
+            try
+            {
+                BuildModels(Zalizniak, ModelsOutputFileName);
+            }
+            catch (Exception exp)
+            {
+                WriteToLog(Logger, "Couldn't build models! Message: " + exp.Message);
+                ErrorBuildModels = true;
+            }
+
+            if (!ErrorBuildModels)
+            {
+                WriteToLog(Logger, "Models had built successfully.");
+            }
+
+
+            Logger.Close();
         }
 
-        static IEnumerable <KeyValuePair <string, string>> GetZalizniak ()
+        private static void BuildModels(IEnumerable<KeyValuePair<string, string>> zalizniak, string outputFileName)
         {
-            var zalizniak = File.ReadAllLines (
-                @"..\..\..\..\zalizniak\zalizniak.txt", // это тот же файл, что и odict.ru/download/odict.zip
-                Encoding.GetEncoding (1251));
+            using (FileStream ModelsFile = File.Create(outputFileName))
+            {
+                var dict = new DawgBuilder <string> ();
+
+                foreach (var entry in zalizniak)
+                {
+                    string lemma = entry.Key;
+
+                    dict.Insert (lemma.Reverse(), entry.Value);
+                }
+
+                var dawg = dict.BuildDawg ();
+
+                dawg.SaveTo(ModelsFile, (w, payload) => w.Write(payload ?? ""));
+            }
+        }
+
+        static IEnumerable<KeyValuePair<string, string>> GetZalizniak(string inputFileName)
+        {
+            var zalizniak = File.ReadAllLines (inputFileName, Encoding.GetEncoding (1251));
 
             foreach (var entry in zalizniak)
             {
@@ -51,20 +122,23 @@ namespace DawgBuilder
             }
         }
 
-        private static void BuildDictForSearch ()
+        private static void BuildDictForSearch(IEnumerable<KeyValuePair<string, string>> zalizniak, string outputFileName)
         {
-            var dict = new DawgBuilder <bool> ();
-
-            foreach (var entry in GetZalizniak ())
+            using (FileStream DictSearchFile = File.Create(outputFileName))
             {
-                string lemma = entry.Key;
+                var dict = new DawgBuilder<bool>();
 
-                dict.Insert (lemma, true);
+                foreach (var entry in zalizniak)
+                {
+                    string lemma = entry.Key;
+
+                    dict.Insert(lemma, true);
+                }
+
+                var dawg = dict.BuildDawg();
+
+                dawg.SaveTo(DictSearchFile, (w, payload) => w.Write(payload));
             }
-
-            var dawg = dict.BuildDawg ();
-
-            dawg.SaveTo (File.Create (@"..\..\..\odict.ru\dict.dawg"), (w, payload) => w.Write (payload));
         }
     }
 }
