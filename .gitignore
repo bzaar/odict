@@ -42,7 +42,6 @@ odict.ru/Web.Release.config
 XMLFile1.xml
 odict.ru/odict.ru.Publish.xml
 odict.ru/download/odict.zip
-DawgBuilder
 packages
 *.suo
 odict.ru/odict.ru.csproj.user
