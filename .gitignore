@@ -46,6 +46,7 @@ packages
 *.suo
 odict.ru/odict.ru.csproj.user
 odict.ru/Properties/PublishProfiles
-upgradelog.htm
+upgradelog*.htm
 DawgBuilder/bin
 DawgBuilder/obj
+odict.ru/App_Data

@@ -39,7 +39,7 @@ namespace odict.ru.add
             string GramInfo = rule.Substring(0, rule.IndexOf("="));
 
             string Line = DictionaryHelper.RemoveStressMarks(lemma).ToLowerInvariant() + " " + 
-                (StressPos == -1 ? "?" : StressPos.ToString()) + " " + GramInfo.Substring(GramInfo.IndexOf(' '));
+                (StressPos == -1 ? "?" : StressPos.ToString()) + GramInfo.Substring(GramInfo.IndexOf(' '));
 
             string[] Forms;
             try 
@@ -61,23 +61,26 @@ namespace odict.ru.add
 
         protected void GetRules(string prefixText)
         {
-            string PrefixText = DictionaryHelper.RemoveStressMarks(prefixText);
+            using (Stream ReverseDict = DawgHelper.SharedOpenDictionary(Context.Server.MapPath("~\\App_Data\\" + DawgHelper.ModelsFileName)))
+            {
+                string PrefixText = DictionaryHelper.RemoveStressMarks(prefixText);
 
-            Dawg<string> Dawg = Dawg<string>.Load(new MemoryStream(Resources.zalizniak), 
-                Func => 
-                { 
-                    string s = Func.ReadString(); 
-                    return s == String.Empty ? null : s; 
-                });
+                Dawg<string> Dawg = Dawg<string>.Load(ReverseDict,
+                    Func =>
+                    {
+                        string s = Func.ReadString();
+                        return s == String.Empty ? null : s;
+                    });
 
-            int PrefixLen = Dawg.GetLongestCommonPrefixLength(PrefixText.Reverse());
+                int PrefixLen = Dawg.GetLongestCommonPrefixLength(PrefixText.Reverse());
 
-            WriteJSONToResponse(Dawg.MatchPrefix(PrefixText.Reverse().Take(PrefixLen))
-                .GroupBy(kvp => kvp.Value, kvp => kvp)
-                .SelectMany(g => g.Take(1))
-                .Select(kvp => kvp.Value + "=" + new string(kvp.Key.Reverse().ToArray()))
-                .Take(10)
-                .ToArray());
+                WriteJSONToResponse(Dawg.MatchPrefix(PrefixText.Reverse().Take(PrefixLen))
+                    .GroupBy(kvp => kvp.Value, kvp => kvp)
+                    .SelectMany(g => g.Take(1))
+                    .Select(kvp => kvp.Value + "=" + new string(kvp.Key.Reverse().ToArray()))
+                    .Take(10)
+                    .ToArray());
+            }
         }
 
         protected void WriteJSONToResponse<T>(T obj)
@@ -117,7 +120,7 @@ namespace odict.ru.add
                         string Rule = context.Request.Params["rule"];
                         if (!String.IsNullOrEmpty(Lemma) && !String.IsNullOrEmpty(Rule))
                         {
-                            GetForms(Lemma, Rule);
+                            GetForms(Lemma, context.Server.UrlDecode(Rule));
                             return;
                         }
                         break;

@@ -2,7 +2,7 @@
     Language="C#" 
     MasterPageFile="~/Site.Master" 
     AutoEventWireup="true" 
-    CodeBehind="Default.aspx.cs" 
+    CodeBehind="Default.aspx.cs"
     Inherits="odict.ru.add.Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
@@ -31,7 +31,7 @@
 //            writeToConsole("requestSuggestions()");
             clearLineForms();
 
-            var lemmaText = document.getElementById("<%= lemma.ClientID %>").value.trim().replace("*", "");
+            var lemmaText = document.getElementById("<%= lemma.ClientID %>").value.trim().replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "");
 
             getRules(lemmaText);
 
@@ -51,7 +51,7 @@
                         words = JSON.parse(xmlhttp.responseText).d;
                         //writeToConsole("suggestionsText: " + xmlhttp.responseText);
 
-                        var sTextboxValue = oAutoSuggestControl.textbox.value.replace("*", "");
+                        var sTextboxValue = oAutoSuggestControl.textbox.value.replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "");
 
                         if (sTextboxValue.length > 0) {
 
@@ -85,6 +85,7 @@
         function getRules(prefix) {
             //writeToConsole("getRules()");
             document.getElementById("<%= selectedRule.ClientID %>").value = "";
+            setSubmitAvailability(false);
 
             var rulesElement = document.getElementById("rules");
             rulesElement.length = 0;
@@ -135,6 +136,9 @@
             var rulesElement = document.getElementById("rules");
             rulesElement.style.display = "none";
             lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord, rulesElement);//, writeToConsole);
+
+            var messageElement = document.getElementById("<%= message.ClientID %>");
+            messageElement.style.display = messageElement.innerHTML ? "block" : none;
         }
         window.onload = onloadpage;
 
@@ -168,21 +172,26 @@
                     if (xmlhttp.status == 200) {
                         lineForms = JSON.parse(xmlhttp.responseText);
                         lineElement.innerHTML = lineForms.Line;
+                        document.getElementById("<%= selectedRule.ClientID %>").value = lineForms.Line;
                         var formsHTML = "";
                         for (var formIndex = 0; formIndex < lineForms.Forms.length; formIndex++) {
                             formsHTML += "<span>" + lineForms.Forms[formIndex] + "</span>" + (formIndex !== (lineForms.Forms.length - 1) ? "<br/>" : "");
                         }
                         formsElement.innerHTML = formsHTML;
+
+                        if (lineForms.Line && lemmaValue.indexOf("<%= odict.ru.add.DictionaryHelper.StressMark %>") !== -1) {
+                            setSubmitAvailability(true);
+                        }
                     }
                 }
             }
 
-            xmlhttp.open("GET", "/api?action=getforms&lemma=" + lemmaValue + "&rule=" + ruleElement.value, true);
+            
+            xmlhttp.open("GET", "/api?action=getforms&lemma=" + lemmaValue + "&rule=" + encodeURIComponent(ruleElement.value), true);
             xmlhttp.send();
         }
 
         function selectRule() {
-            document.getElementById("<%= selectedRule.ClientID %>").value = document.getElementById("rules").value;
             getLineForms();
         }
         function focusRule() {
@@ -192,21 +201,30 @@
                 selectRule();
             }
         }
+        function setSubmitAvailability(flag) {
+            var submitAddElement = document.getElementById("<%= submitAdd.ClientID %>").disabled = flag ? "" : "disabled";
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <asp:Label ID="message" CssClass="topMessage" runat="server"></asp:Label>
     <div class="block">
         <asp:TextBox ID="lemma" CssClass="lemma-textbox" runat="server" />
-        <asp:HiddenField ID="selectedRule" runat="server" />
+        <div>
+            <asp:HiddenField ID="selectedRule" runat="server" />
+            <div class="linediv">
+                <span id="line" ></span>
+            </div>
+            <div>
+                <asp:Button ID="submitAdd" Enabled="false" UseSubmitBehavior="true" CssClass="submitAdd" Text="Добавить" runat="server" />
+            </div>
+            <div id="forms" class="forms"></div>
+        </div>
     </div>
     <div class="block lmargin10px">
         <select id="rules" class="ruleslist" onchange="selectRule()" onfocus="focusRule()" size="2"></select>        
     </div>
     <div class="clearblock">
-        <p>
-            <span id="line"></span>
-        </p>
-        <div id="forms"></div>
     </div>
 <%--    <div id="console" style="color:red;font-size:small">  
     </div>--%>

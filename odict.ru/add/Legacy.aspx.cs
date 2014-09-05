@@ -14,7 +14,7 @@ namespace odict.ru.add
         {
             string trimmedLemma = this.LemmaTextBox.Text.Trim ();
 
-            int stressPos = trimmedLemma.IndexOf ('*');
+            int stressPos = trimmedLemma.IndexOf (DictionaryHelper.StressMark);
 
 
             string lemma = DictionaryHelper.RemoveStressMarks (trimmedLemma);
@@ -46,25 +46,28 @@ namespace odict.ru.add
 
                 if (this.ModelsListBox.Visible)
                 {
-                    var dawg = DawgSharp.Dawg<string>.Load (new MemoryStream (Resources.zalizniak), r => {var s = r.ReadString (); return s == "" ? null : s;});
-
-                    int prefixLen = dawg.GetLongestCommonPrefixLength(lemma.Reverse ());
-
-                    var matches = dawg.MatchPrefix (lemma.Reverse ().Take (prefixLen))
-                        .GroupBy (kvp => kvp.Value, kvp => kvp)
-                        .SelectMany (g => g.Take (1))
-                        .Select (kvp => kvp.Value + "\t" + new string (kvp.Key.Reverse ().ToArray ()) )
-                        .Take (10)
-                        .ToArray ();
-
-                    this.ModelsListBox.Items.Clear();
-                    
-                    foreach (var match in matches)
+                    using (FileStream ReverseDict = new FileStream(Context.Server.MapPath("App_Data\\" + DawgHelper.ModelsFileName), FileMode.Open, FileAccess.Read))
                     {
-                        this.ModelsListBox.Items.Add (match);
+                        var dawg = DawgSharp.Dawg<string>.Load(ReverseDict, r => { var s = r.ReadString(); return s == "" ? null : s; });
+
+                        int prefixLen = dawg.GetLongestCommonPrefixLength(lemma.Reverse());
+
+                        var matches = dawg.MatchPrefix(lemma.Reverse().Take(prefixLen))
+                            .GroupBy(kvp => kvp.Value, kvp => kvp)
+                            .SelectMany(g => g.Take(1))
+                            .Select(kvp => kvp.Value + "\t" + new string(kvp.Key.Reverse().ToArray()))
+                            .Take(10)
+                            .ToArray();
+
+                        this.ModelsListBox.Items.Clear();
+
+                        foreach (var match in matches)
+                        {
+                            this.ModelsListBox.Items.Add(match);
+                        }
+
+                        this.ModelsListBox.Rows = Math.Max(this.ModelsListBox.Items.Count, 2);
                     }
-                    
-                    this.ModelsListBox.Rows = Math.Max(this.ModelsListBox.Items.Count, 2);
                 }
             }
         }

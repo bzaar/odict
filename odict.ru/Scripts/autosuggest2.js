@@ -147,6 +147,7 @@ AutoSuggestControl.prototype.handleKeyDown = function (oEvent /*:Event*/) {
         case 40: //down arrow 
             this.nextSuggestion();
             break;
+//        case 9:
         case 13: //enter
             //this.hideSuggestions();
             if (this.oNextControl) {

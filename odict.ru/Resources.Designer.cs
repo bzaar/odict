@@ -61,16 +61,6 @@ namespace odict.ru {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] dict {
-            get {
-                object obj = ResourceManager.GetObject("dict", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
         ///&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
         ///&lt;head&gt;
@@ -89,16 +79,6 @@ namespace odict.ru {
         internal static string EmailTemplate {
             get {
                 return ResourceManager.GetString("EmailTemplate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] zalizniak {
-            get {
-                object obj = ResourceManager.GetObject("zalizniak", resourceCulture);
-                return ((byte[])(obj));
             }
         }
     }

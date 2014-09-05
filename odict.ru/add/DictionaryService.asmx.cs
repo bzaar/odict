@@ -23,9 +23,12 @@ namespace odict.ru
         [System.Web.Script.Services.ScriptMethod]
         public string [] GetCompletionList (string prefixText, int count)
         {
-            var dict = DawgSharp.Dawg<bool>.Load (new MemoryStream (Resources.dict), r => r.ReadBoolean ());
+            using (Stream ForwardDict = DawgHelper.SharedOpenDictionary(Server.MapPath("~\\App_Data\\" + DawgHelper.DictionaryForSearchFileName))) //forward.dawg
+            {
+                var dict = DawgSharp.Dawg<bool>.Load(ForwardDict, r => r.ReadBoolean());
 
-            return dict.MatchPrefix (DictionaryHelper.RemoveStressMarks(prefixText)).Take (10).Select (kvp => kvp.Key).ToArray ();
+                return dict.MatchPrefix (DictionaryHelper.RemoveStressMarks(prefixText)).Take (10).Select (kvp => kvp.Key).ToArray ();
+            }
         }
     }
 }

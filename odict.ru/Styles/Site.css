@@ -94,7 +94,7 @@ first child of the left and right table columns */
 .page
 {
     max-width: 960px;
-    margin: 50px auto 0px auto;
+    margin: 10px auto 0px auto;
 }
 
 .header
@@ -336,9 +336,35 @@ div.accountInfo
 }
 .block
 {
+    margin-top:30px;
     float: left;
 }
 .lmargin10px
 {
     margin-left:10px;
+}
+.topMessage
+{
+    position:absolute;
+}
+.submitAdd
+{
+    margin-top:5px;
+}
+.linediv
+{
+    min-height:30px;
+    margin-top: 10px;
+}
+.forms
+{
+    margin-top:20px;
+}
+.messageSuccess
+{
+    color:#0f6;
+}
+.messageError
+{
+    color:#ff3322;
 }

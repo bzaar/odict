@@ -106,15 +106,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="add\DawgBuilder.exe" />
     <Content Include="add\Default.aspx" />
     <Content Include="add\Legacy.aspx" />
     <Content Include="add\DictionaryService.asmx" />
     <Content Include="add\help\Default.aspx" />
+    <Content Include="App_Data\zalizniak.txt" />
     <Content Include="download\Default.aspx" />
-    <Content Include="dict.dawg" />
     <Content Include="add\Api.ashx" />
     <None Include="EmailTemplate.htm" />
+    <Content Include="Global.asax" />
     <Content Include="pomety\Default.aspx" />
     <Content Include="Scripts\autosuggest2.js" />
     <Content Include="structure\Default.aspx" />
@@ -133,6 +133,7 @@
     <None Include="Properties\PublishProfiles\test.odict.ru.pubxml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="add\DawgHelper.cs" />
     <Compile Include="add\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -177,6 +178,9 @@
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="DbContext.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="pomety\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
