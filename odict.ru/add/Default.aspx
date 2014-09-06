@@ -137,8 +137,10 @@
             rulesElement.style.display = "none";
             lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord, rulesElement);//, writeToConsole);
 
+            setSubmitAvailability(false);
+
             var messageElement = document.getElementById("<%= message.ClientID %>");
-            messageElement.style.display = messageElement.innerHTML ? "block" : none;
+            messageElement.style.display = messageElement.innerHTML ? "block" : "none";
         }
         window.onload = onloadpage;
 
@@ -150,7 +152,12 @@
             document.getElementById("line").innerHTML = "";
             document.getElementById("forms").innerHTML = "";
         }
-
+        function checkStressPosition(text) {
+            var stressPosition = text.indexOf("<%= odict.ru.add.DictionaryHelper.StressMark %>");
+            
+            return stressPosition > 0 // is strees mark specified and it's position after the first letter
+                && ["<%= String.Join("\",\"", odict.ru.add.DictionaryHelper.Vowels) %>"].indexOf(text[stressPosition - 1]) !== -1; //previous letter has to be a vowel
+        }
         function getLineForms() {
             clearLineForms();
             var lineElement = document.getElementById("line");
@@ -179,13 +186,12 @@
                         }
                         formsElement.innerHTML = formsHTML;
 
-                        if (lineForms.Line && lemmaValue.indexOf("<%= odict.ru.add.DictionaryHelper.StressMark %>") !== -1) {
+                        if (lineForms.Line && checkStressPosition(lemmaValue)) {
                             setSubmitAvailability(true);
                         }
                     }
                 }
             }
-
             
             xmlhttp.open("GET", "/api?action=getforms&lemma=" + lemmaValue + "&rule=" + encodeURIComponent(ruleElement.value), true);
             xmlhttp.send();
@@ -216,7 +222,7 @@
                 <span id="line" ></span>
             </div>
             <div>
-                <asp:Button ID="submitAdd" Enabled="false" UseSubmitBehavior="true" CssClass="submitAdd" Text="Добавить" runat="server" />
+                <asp:Button ID="submitAdd" UseSubmitBehavior="false" OnClientClick="this.disabled = true" CssClass="submitAdd" Text="Добавить" runat="server" />
             </div>
             <div id="forms" class="forms"></div>
         </div>
