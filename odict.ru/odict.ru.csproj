@@ -133,7 +133,7 @@
     <None Include="Properties\PublishProfiles\test.odict.ru.pubxml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="add\DawgHelper.cs" />
+    <Compile Include="DawgBuilder.cs" />
     <Compile Include="add\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using odict.ru.add;
 
 namespace odict.ru
 {
@@ -34,8 +33,8 @@ namespace odict.ru
 
         public void UpdateIndices ()
         {
-            UpdateIndex (forwardDawg, DawgHelper.BuildDictForSearch);
-            UpdateIndex (reverseDawg, DawgHelper.BuildModels);
+            UpdateIndex (forwardDawg, DawgBuilder.BuildDictForSearch);
+            UpdateIndex (reverseDawg, DawgBuilder.BuildModels);
         }
 
         void UpdateIndex (string filename, Action <IEnumerable <KeyValuePair <string, string>>, string> rebuild)
@@ -45,7 +44,7 @@ namespace odict.ru
             if (!File.Exists (indexFilePath) || File.GetLastWriteTime (ZalizniakFilePath) > File.GetLastWriteTime (indexFilePath))
             {
                 new Task (() => 
-                    rebuild (DawgHelper.GetZalizniak (File.ReadAllLines (ZalizniakFilePath, zalizniakFileEncoding)), indexFilePath)
+                    rebuild (DawgBuilder.GetZalizniak (File.ReadAllLines (ZalizniakFilePath, zalizniakFileEncoding)), indexFilePath)
                 ).Start ();
             }
         }
