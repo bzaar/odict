@@ -140,20 +140,22 @@ AutoSuggestControl.prototype.getTop = function () /*:int*/ {
  * @param oEvent The event object for the keydown event.
  */
 AutoSuggestControl.prototype.handleKeyDown = function (oEvent /*:Event*/) {
-    switch(oEvent.keyCode) {
+    var result = true;
+    switch (oEvent.keyCode) {
         case 38: //up arrow
             this.previousSuggestion();
             break;
         case 40: //down arrow 
             this.nextSuggestion();
             break;
-//        case 9:
+        case 9:
+            result = false;
         case 13: //enter
             //this.hideSuggestions();
             if (this.oNextControl) {
                 this.oNextControl.focus();
             }
-            break;
+            return result;
         case 27:
             this.hideSuggestions();
             break;
@@ -247,7 +249,7 @@ AutoSuggestControl.prototype.init = function () {
         }    
         
         //call the handleKeyDown() method with the event object
-        oThis.handleKeyDown(oEvent);
+        return oThis.handleKeyDown(oEvent);
     };
     
     //assign onblur event handler (hides suggestions)    
