@@ -14,7 +14,7 @@ namespace odict.ru
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            string AppDataPath = Server.MapPath("App_Data");
+            string AppDataPath = Server.MapPath("~/App_Data");
             if (!File.Exists(AppDataPath + "\\" + DawgHelper.DictionaryForSearchFileName) ||
                 !File.Exists(AppDataPath + "\\" + DawgHelper.ModelsFileName))
             {
