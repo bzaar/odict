@@ -1,9 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Web.Services;
-using odict.ru.add;
 
-namespace odict.ru
+namespace odict.ru.add
 {
     /// <summary>
     /// Summary description for DictionaryService
