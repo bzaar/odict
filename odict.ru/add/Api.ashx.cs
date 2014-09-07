@@ -70,7 +70,7 @@ namespace odict.ru.add
 
         protected void GetRules(string prefixText)
         {
-            using (Stream ReverseDict = DawgHelper.SharedOpenDictionary(Context.Server.MapPath("~\\App_Data\\" + DawgHelper.ModelsFileName)))
+            using (Stream ReverseDict = new FileBasedDictionary (Context.Server).OpenReverseIndex ())
             {
                 string PrefixText = DictionaryHelper.RemoveStressMarks(prefixText);
 

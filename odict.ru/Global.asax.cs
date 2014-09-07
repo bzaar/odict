@@ -1,24 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
-using System.Web.Security;
-using System.Web.SessionState;
-
-using System.IO;
-using odict.ru.add;
 
 namespace odict.ru
 {
-    public class Global : System.Web.HttpApplication
+    public class Global : HttpApplication
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            string AppDataPath = Server.MapPath("~/App_Data");
-            if (!File.Exists(AppDataPath + "\\" + DawgHelper.DictionaryForSearchFileName) ||
-                !File.Exists(AppDataPath + "\\" + DawgHelper.ModelsFileName))
+            var dictionary = new FileBasedDictionary (Server);
+
+            dictionary.UpdateIndices ();
+
+            if (!dictionary.FileExists ())
             {
-                DawgHelper.BuildDictionaries(AppDataPath);
+                throw new Exception ("App_Data/zalizniak.txt is missing.");
             }
         }
 

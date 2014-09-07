@@ -170,6 +170,7 @@
       <DependentUpon>DictionaryService.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="FileBasedDictionary.cs" />
     <Compile Include="download\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

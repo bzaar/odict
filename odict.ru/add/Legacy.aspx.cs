@@ -46,7 +46,7 @@ namespace odict.ru.add
 
                 if (this.ModelsListBox.Visible)
                 {
-                    using (FileStream ReverseDict = new FileStream(Context.Server.MapPath("App_Data\\" + DawgHelper.ModelsFileName), FileMode.Open, FileAccess.Read))
+                    using (Stream ReverseDict = new FileBasedDictionary (Context.Server).OpenReverseIndex ())
                     {
                         var dawg = DawgSharp.Dawg<string>.Load(ReverseDict, r => { var s = r.ReadString(); return s == "" ? null : s; });
 

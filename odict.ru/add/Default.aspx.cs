@@ -10,18 +10,29 @@ namespace odict.ru.add
             if (IsPostBack)
             {
                 string NewLine = DictionaryHelper.RemoveStressMarks(lemma.Text) + " " + selectedRule.Text;
-                if (!String.IsNullOrEmpty(lemma.Text) && DictionaryHelper.CheckStressPosition(lemma.Text) &&
-                    !String.IsNullOrEmpty(NewLine) && DawgHelper.AddItemToDictionary(Server.MapPath("~\\App_Data"), NewLine))
+
+                if (String.IsNullOrEmpty(lemma.Text))
                 {
-                    message.Text = "Статья \"" + NewLine + "\" добавлена в словарь.";
-                    message.CssClass = "messageSuccess";
-                    lemma.Text = String.Empty;
-                    selectedRule.Text = String.Empty;
+                    message.Text = "Введите слово.";
+                    message.CssClass = "messageError";
+                }
+                else if (!DictionaryHelper.CheckStressPosition (lemma.Text))
+                {
+                    message.Text = "Укажите ударение. Например: приве*т.";
+                    message.CssClass = "messageError";
                 }
                 else
                 {
-                    message.Text = "Ошибка при добавлении статьи \"" + NewLine + "\" в словарь!";
-                    message.CssClass = "messageError";
+                    message.Text = "Статья \"" + NewLine + "\" добавлена в словарь.";
+                    message.CssClass = "messageSuccess";
+
+                    lemma.Text = String.Empty;
+                    selectedRule.Text = String.Empty;
+
+                    var fileBasedDictionary = new FileBasedDictionary (Server);
+
+                    fileBasedDictionary.AddEntry (NewLine);
+                    fileBasedDictionary.UpdateIndices ();
                 }
             }
         }
