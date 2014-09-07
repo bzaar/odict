@@ -20,7 +20,7 @@ namespace odict.ru.add
         //    { "uk", new string[] { } },
         //};
 
-        public static bool CheckStreesPosition(string text)
+        public static bool CheckStressPosition(string text)
         {
             int StressPosition = text.IndexOf(StressMark);
 

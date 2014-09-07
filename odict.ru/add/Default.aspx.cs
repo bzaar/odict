@@ -10,7 +10,7 @@ namespace odict.ru.add
             if (IsPostBack)
             {
                 string NewLine = DictionaryHelper.RemoveStressMarks(lemma.Text) + " " + selectedRule.Text;
-                if (!String.IsNullOrEmpty(lemma.Text) && DictionaryHelper.CheckStreesPosition(lemma.Text) &&
+                if (!String.IsNullOrEmpty(lemma.Text) && DictionaryHelper.CheckStressPosition(lemma.Text) &&
                     !String.IsNullOrEmpty(NewLine) && DawgHelper.AddItemToDictionary(Server.MapPath("~\\App_Data"), NewLine))
                 {
                     message.Text = "Статья \"" + NewLine + "\" добавлена в словарь.";
