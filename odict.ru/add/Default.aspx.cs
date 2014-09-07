@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 
 namespace odict.ru.add
 {
     public partial class Default : Page
     {
-        private static readonly object DawgLocker = new object();
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (IsPostBack)
