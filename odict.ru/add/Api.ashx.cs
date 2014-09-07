@@ -137,7 +137,7 @@ namespace odict.ru.add
                         string Rule1 = context.Request.Params["rule"];
                         if (!String.IsNullOrEmpty(Lemma) && !String.IsNullOrEmpty(Rule1))
                         {
-                            GetLineForms(Lemma, context.Server.UrlDecode(Rule1));
+                            GetLineForms(Lemma, Rule1);
                             return;
                         }
                         break;

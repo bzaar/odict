@@ -125,7 +125,7 @@
                 }
             }
 
-            xmlhttp.open("GET", "/api?action=getrules&prefixtext=" + prefix, true);
+            xmlhttp.open("GET", "/api?action=getrules&prefixtext=" + encodeURI(prefix), true);
             xmlhttp.send();
         }
 
@@ -194,7 +194,7 @@
                 }
             }
             
-            xmlhttp.open("GET", "/api?action=get" + (!formsOnly ? "lineforms&lemma=" + lemmaValue : "forms") + "&rule=" + encodeURIComponent(ruleValue), true);
+            xmlhttp.open("GET", "/api?action=get" + (!formsOnly ? "lineforms&lemma=" + encodeURI(lemmaValue) : "forms") + "&rule=" + encodeURIComponent(ruleValue), true);
             xmlhttp.send();
         }
         function placeStressMark() {
@@ -209,7 +209,8 @@
             lemmaElement.value = lemmaElementValue;
         }
         function selectRule() {
-            getLineForms(document.getElementById("rules").value, false);
+            var rulesElement = document.getElementById("rules");
+            getLineForms(rulesElement.innerText || rulesElement.value, false);
         }
         function focusRule() {
             var rulesElement = document.getElementById("rules");
