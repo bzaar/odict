@@ -32,19 +32,12 @@ namespace odict.ru.add
             Context = System.Web.HttpContext.Current;
         }
         
-        protected void GetForms(string lemma, string rule)
-        {            
-            int StressPos = lemma.Trim().IndexOf(DictionaryHelper.StressMark);
-
-            string GramInfo = rule.Substring(0, rule.IndexOf("="));
-
-            string Line = DictionaryHelper.RemoveStressMarks(lemma).ToLowerInvariant() + " " + 
-                (StressPos == -1 ? "?" : StressPos.ToString()) + GramInfo.Substring(GramInfo.IndexOf(' '));
-
+        private string[] GetFormsByRule(string rule)
+        {
             string[] Forms;
-            try 
+            try
             {
-                Forms = FormGenerator.GetAccentedForms(Line, delegate { })
+                Forms = FormGenerator.GetAccentedForms(rule, delegate { })
                     .Select(Func => HttpUtility.HtmlEncode(Func.AccentedForm)).ToArray();
             }
             catch
@@ -52,10 +45,26 @@ namespace odict.ru.add
                 Forms = new string[] { };
             }
 
+            return Forms;
+        }
+        protected void GetForms(string rule)
+        {
+            WriteJSONToResponse(GetFormsByRule(rule));
+        }
+
+        protected void GetLineForms(string lemma, string rule)
+        {            
+            int StressPos = lemma.Trim().IndexOf(DictionaryHelper.StressMark);
+
+            string GramInfo = rule.Substring(0, rule.IndexOf(DictionaryHelper.RuleLineDelimiter));
+
+            string Line = DictionaryHelper.RemoveStressMarks(lemma).ToLowerInvariant() + " " + 
+                (StressPos == -1 ? "?" : StressPos.ToString()) + GramInfo.Substring(GramInfo.IndexOf(' '));
+
             WriteJSONToResponse(new LineForms()
                 {
                     Line = Line,
-                    Forms = Forms
+                    Forms = GetFormsByRule(Line)
                 });
         }
 
@@ -77,7 +86,7 @@ namespace odict.ru.add
                 WriteJSONToResponse(Dawg.MatchPrefix(PrefixText.Reverse().Take(PrefixLen))
                     .GroupBy(kvp => kvp.Value, kvp => kvp)
                     .SelectMany(g => g.Take(1))
-                    .Select(kvp => kvp.Value + "=" + new string(kvp.Key.Reverse().ToArray()))
+                    .Select(kvp => kvp.Value + DictionaryHelper.RuleLineDelimiter + new string(kvp.Key.Reverse().ToArray()))
                     .Take(10)
                     .ToArray());
             }
@@ -116,11 +125,19 @@ namespace odict.ru.add
                         }
                         break;
                     case "getforms":
-                        string Lemma = context.Request.Params["lemma"];
-                        string Rule = context.Request.Params["rule"];
-                        if (!String.IsNullOrEmpty(Lemma) && !String.IsNullOrEmpty(Rule))
+                        string Rule0 = context.Request.Params["rule"];
+                        if (!String.IsNullOrEmpty(Rule0))
                         {
-                            GetForms(Lemma, context.Server.UrlDecode(Rule));
+                            GetForms(context.Server.UrlDecode(Rule0));
+                            return;
+                        }
+                        break;
+                    case "getlineforms":
+                        string Lemma = context.Request.Params["lemma"];
+                        string Rule1 = context.Request.Params["rule"];
+                        if (!String.IsNullOrEmpty(Lemma) && !String.IsNullOrEmpty(Rule1))
+                        {
+                            GetLineForms(Lemma, context.Server.UrlDecode(Rule1));
                             return;
                         }
                         break;

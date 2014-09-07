@@ -15,17 +15,18 @@ namespace odict.ru.add
         {
             if (IsPostBack)
             {
+                string NewLine = DictionaryHelper.RemoveStressMarks(lemma.Text) + " " + selectedRule.Text;
                 if (!String.IsNullOrEmpty(lemma.Text) && DictionaryHelper.CheckStreesPosition(lemma.Text) &&
-                    !String.IsNullOrEmpty(selectedRule.Value) && DawgHelper.AddItemToDictionary(Server.MapPath("~\\App_Data"), selectedRule.Value)) 
+                    !String.IsNullOrEmpty(NewLine) && DawgHelper.AddItemToDictionary(Server.MapPath("~\\App_Data"), NewLine))
                 {
-                    message.Text = "Строка &quot;" + selectedRule.Value + "&quot; успешно добавлена в словарь!";
+                    message.Text = "Строка &quot;" + NewLine + "&quot; успешно добавлена в словарь!";
                     message.CssClass = "messageSuccess";
                     lemma.Text = String.Empty;
-                    selectedRule.Value = String.Empty;
+                    selectedRule.Text = String.Empty;
                 }
                 else
                 {
-                    message.Text = "Ошибка при добавлении строки &quot;" + selectedRule.Value + "&quot; в словарь!";
+                    message.Text = "Ошибка при добавлении строки &quot;" + NewLine + "&quot; в словарь!";
                     message.CssClass = "messageError";
                 }
             }

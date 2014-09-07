@@ -10,6 +10,7 @@ namespace odict.ru.add
     public static class DictionaryHelper
     {
         public const string StressMark = "*";
+        public const string RuleLineDelimiter = "=";
 
         public static readonly string[] Vowels = new string[] { "а", "е", "ё", "и", "о", "у", "ы", "э", "ю", "я" };
 

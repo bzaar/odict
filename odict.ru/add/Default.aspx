@@ -32,6 +32,7 @@
             clearLineForms();
 
             var lemmaText = document.getElementById("<%= lemma.ClientID %>").value.trim().replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "");
+            document.getElementById("line").innerHTML = lemmaText;
 
             getRules(lemmaText);
 
@@ -128,14 +129,16 @@
             xmlhttp.send();
         }
 
-        var lemmaTextbox;
+        //var lemmaTextbox;
         function onloadpage() {
             //writeToConsole(navigator.appVersion);
             var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
             lemmaElement.focus();
             var rulesElement = document.getElementById("rules");
             rulesElement.style.display = "none";
-            lemmaTextbox = new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord, rulesElement);//, writeToConsole);
+            new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord, rulesElement);//, writeToConsole);
+
+            document.getElementById('<%= selectedRule.ClientID %>').onkeydown = function(event) { return nextByKeyDown(event, '<%= submitAdd.ClientID %>') };
 
             setSubmitAvailability(false);
 
@@ -149,7 +152,7 @@
         }
 
         function clearLineForms() {
-            document.getElementById("line").innerHTML = "";
+            //document.getElementById("line").innerHTML = "";
             document.getElementById("forms").innerHTML = "";
         }
         function checkStressPosition(text) {
@@ -158,47 +161,55 @@
             return stressPosition > 0 // is strees mark specified and it's position after the first letter
                 && ["<%= String.Join("\",\"", odict.ru.add.DictionaryHelper.Vowels) %>"].indexOf(text[stressPosition - 1]) !== -1; //previous letter has to be a vowel
         }
-        function getLineForms() {
+        function getLineForms(ruleValue, formsOnly) {
             clearLineForms();
-            var lineElement = document.getElementById("line");
             var formsElement = document.getElementById("forms");
 
             var lemmaValue = document.getElementById("<%= lemma.ClientID %>").value;
-            var ruleElement = document.getElementById("rules");
 
-            if (!lemmaValue || !ruleElement.value) {
+            if (!lemmaValue || !ruleValue) {
                 return;
             }
-
-            var ruleValue = ruleElement.value;//ruleElement.options[ruleElement.selectedIndex].value;
 
             var xmlhttp = getxmlhttp();
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4) {
                     if (xmlhttp.status == 200) {
-                        lineForms = JSON.parse(xmlhttp.responseText);
-                        lineElement.innerHTML = lineForms.Line;
-                        document.getElementById("<%= selectedRule.ClientID %>").value = lineForms.Line;
+                        getResult = JSON.parse(xmlhttp.responseText);
+
+                        if (!formsOnly) {
+                            var spacePos = getResult.Line.indexOf(" ");
+                            document.getElementById("<%= selectedRule.ClientID %>").value = getResult.Line.substr(spacePos + 1);
+                        }
+
                         var formsHTML = "";
-                        for (var formIndex = 0; formIndex < lineForms.Forms.length; formIndex++) {
-                            formsHTML += "<span>" + lineForms.Forms[formIndex] + "</span>" + (formIndex !== (lineForms.Forms.length - 1) ? "<br/>" : "");
+                        var formsArray = !formsOnly ? getResult.Forms : getResult;
+                        for (var formIndex = 0; formIndex < formsArray.length; formIndex++) {
+                            formsHTML += "<span>" + formsArray[formIndex] + "</span>" + (formIndex !== (formsArray.length - 1) ? "<br/>" : "");
                         }
                         formsElement.innerHTML = formsHTML;
-
-                        if (lineForms.Line && checkStressPosition(lemmaValue)) {
-                            setSubmitAvailability(true);
-                        }
+                        setSubmitAvailability(checkStressPosition(lemmaValue));
                     }
                 }
             }
             
-            xmlhttp.open("GET", "/api?action=getforms&lemma=" + lemmaValue + "&rule=" + encodeURIComponent(ruleElement.value), true);
+            xmlhttp.open("GET", "/api?action=get" + (!formsOnly ? "lineforms&lemma=" + lemmaValue : "forms") + "&rule=" + encodeURIComponent(ruleValue), true);
             xmlhttp.send();
         }
+        function placeStressMark() {
+            var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
+            var selectedRuleValue = document.getElementById("<%= selectedRule.ClientID %>").value;
+            var streesPos = +selectedRuleValue.substr(0, selectedRuleValue.indexOf(" "));
 
+            var lemmaElementValue = lemmaElement.value.replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "");
+            if (streesPos > 0) {
+                lemmaElementValue = lemmaElementValue.substr(0, streesPos) + "<%= odict.ru.add.DictionaryHelper.StressMark %>" + lemmaElementValue.substr(streesPos);
+            }
+            lemmaElement.value = lemmaElementValue;
+        }
         function selectRule() {
-            getLineForms();
+            getLineForms(document.getElementById("rules").value, false);
         }
         function focusRule() {
             var rulesElement = document.getElementById("rules");
@@ -210,6 +221,34 @@
         function setSubmitAvailability(flag) {
             var submitAddElement = document.getElementById("<%= submitAdd.ClientID %>").disabled = flag ? "" : "disabled";
         }
+        function nextByKeyDown(event, nextId) {
+            var keyCode = event.keyCode ? event.keyCode : event.charCode;
+            var next = document.getElementById(nextId);
+            if ([9, 13].indexOf(keyCode) !== -1) {
+                next.focus();
+                return false;
+            }
+        }
+        var lastSelectedRuleValue = null;
+        function ruleChange() {
+            var selectedRuleValue = document.getElementById("<%= selectedRule.ClientID %>").value.trim();
+            
+            if (lastSelectedRuleValue === selectedRuleValue) {
+                return;
+            }
+            lastSelectedRuleValue = selectedRuleValue;
+            
+            var rulesElement = document.getElementById("rules");
+            placeStressMark();
+            rulesElement.selectedIndex = -1;
+            for (var ruleIndex = 0; ruleIndex < rulesElement.length; ruleIndex++) {   
+                if (selectedRuleValue.trim() === rulesElement.options[ruleIndex].value.substr(0, rulesElement.options[ruleIndex].value.indexOf("<%= odict.ru.add.DictionaryHelper.RuleLineDelimiter %>"))) {
+                    rulesElement.selectedIndex = ruleIndex;
+                }
+            }
+
+            getLineForms(document.getElementById("line").innerHTML + " " + selectedRuleValue, true);
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -217,9 +256,8 @@
     <div class="block">
         <asp:TextBox ID="lemma" CssClass="lemma-textbox" runat="server" />
         <div>
-            <asp:HiddenField ID="selectedRule" runat="server" />
             <div class="linediv">
-                <span id="line" ></span>
+                <span id="line" ></span>&nbsp;<asp:TextBox ID="selectedRule" onkeyup="ruleChange()" runat="server"></asp:TextBox>
             </div>
             <div>
                 <asp:Button ID="submitAdd" UseSubmitBehavior="false" OnClientClick="this.disabled = true" CssClass="submitAdd" Text="Добавить" runat="server" />
@@ -228,7 +266,7 @@
         </div>
     </div>
     <div class="block lmargin10px">
-        <select id="rules" class="ruleslist" onchange="selectRule()" onfocus="focusRule()" size="2"></select>        
+        <select id="rules" class="ruleslist" onchange="selectRule()" ondblclick="selectRule()" onfocus="focusRule()" onkeydown="return nextByKeyDown(event, '<%= selectedRule.ClientID %>')" size="2"></select>        
     </div>
     <div class="clearblock">
     </div>
