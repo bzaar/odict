@@ -19,14 +19,14 @@ namespace odict.ru.add
                 if (!String.IsNullOrEmpty(lemma.Text) && DictionaryHelper.CheckStreesPosition(lemma.Text) &&
                     !String.IsNullOrEmpty(NewLine) && DawgHelper.AddItemToDictionary(Server.MapPath("~\\App_Data"), NewLine))
                 {
-                    message.Text = "Строка &quot;" + NewLine + "&quot; успешно добавлена в словарь!";
+                    message.Text = "Статья &quot;" + NewLine + "&quot; добавлена в словарь.";
                     message.CssClass = "messageSuccess";
                     lemma.Text = String.Empty;
                     selectedRule.Text = String.Empty;
                 }
                 else
                 {
-                    message.Text = "Ошибка при добавлении строки &quot;" + NewLine + "&quot; в словарь!";
+                    message.Text = "Ошибка при добавлении статьи &quot;" + NewLine + "&quot; в словарь!";
                     message.CssClass = "messageError";
                 }
             }
