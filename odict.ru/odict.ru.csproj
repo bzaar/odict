@@ -96,6 +96,7 @@
     <Content Include="Scripts\autosuggest2.js" />
     <Content Include="structure\Default.aspx" />
     <Content Include="Styles\autosuggest.css" />
+    <Content Include="Styles\Mobile.css" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Web.config" />
@@ -106,6 +107,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="packages.config" />
+    <Content Include="Mobile.Master" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\test.odict.ru.pubxml" />
   </ItemGroup>
@@ -151,6 +153,13 @@
     <Compile Include="DbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile.Master.cs">
+      <DependentUpon>Mobile.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Mobile.Master.designer.cs">
+      <DependentUpon>Mobile.Master</DependentUpon>
     </Compile>
     <Compile Include="pomety\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

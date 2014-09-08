@@ -5,6 +5,14 @@ namespace odict.ru.add
 {
     public partial class Default : Page
     {
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Request.Browser.ScreenPixelsWidth < 800)
+            {
+                MasterPageFile = "~/Mobile.Master";
+            }
+        }
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (IsPostBack)

@@ -1,0 +1,151 @@
+﻿/* DEFAULTS
+----------------------------------------------------------*/
+body   
+{
+    background: white;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    color: #776969;
+    font-size :25px;
+}
+
+a:link, a:visited
+{
+    color: #034af3;
+}
+
+a:hover
+{
+    color: #1d60ff;
+    text-decoration: none;
+}
+
+a:active
+{
+    color: #034af3;
+}
+
+input
+{
+    padding: 10px;
+    border:2px solid silver;
+    font-size:25px;
+}
+input:focus
+{
+    border-color:blue;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+@media screen and (max-device-width: 480px) {
+    .page
+    {
+        margin:0px auto 0px auto;
+        border:1px solid red;
+        width:45%;
+        padding:10px;
+    }
+    input
+    {
+        width:90%;
+    }
+}
+
+.footer
+{
+    color: #4e5766;
+    padding: 8px 0px 1em 0px;
+    margin: 300px auto;
+    text-align: center;
+    line-height: normal;
+}
+
+
+
+/* MISC  
+----------------------------------------------------------*/
+
+.clear
+{
+    clear: both;
+}
+
+/* LAYOUT
+----------------------------------------------------------*/
+.leftpane
+{
+    float:left;
+}
+.rightpane
+{
+    margin-left:10px;
+    float:left;
+}
+.clearblock
+{
+    clear:both;
+}
+.ruleslist 
+{
+    width:100%;
+    
+}
+.lemma-textbox
+{
+    margin: 0px;
+    width:100%;
+}
+.block
+{
+    margin-top:10px;
+}
+.lmargin10px
+{
+}
+.divTopMessage
+{
+    text-align:center;
+    margin: 0px auto 0px auto;
+    min-height: 40px;
+}
+.submitAdd
+{
+    width:50%;
+    margin: 10px auto 10px auto;
+}
+.linediv
+{
+    min-height:30px;
+    margin-top: 10px;
+}
+.forms
+{
+    margin-top:20px;
+}
+.messageSuccess
+{
+    color:#029a0a;
+}
+.messageError
+{
+    color:#ff3322;
+}
+.div250
+{
+
+}
+.div400
+{
+
+}
+.div100
+{
+
+}
+.width100pr 
+{
+    width:80%;
+}
