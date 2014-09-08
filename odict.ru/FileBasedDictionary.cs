@@ -31,11 +31,12 @@ namespace odict.ru
         private readonly Encoding zalizniakFileEncoding = Encoding.GetEncoding (1251);
         private const string forwardDawg = "forward.dawg";
         private const string reverseDawg = "reverse.dawg";
+        private const string zipPath = "~/download/odict.zip";
 
         public void UpdateIndices ()
         {
-            UpdateIndex (forwardDawg, DawgBuilder.BuildDictForSearch);
-            UpdateIndex (reverseDawg, DawgBuilder.BuildModels);
+            UpdateIndex (forwardDawg, DawgBuilder.BuildForward);
+            UpdateIndex (reverseDawg, DawgBuilder.BuildReverse);
             UpdateZip ();
         }
 
@@ -85,14 +86,14 @@ namespace odict.ru
 
         public void UpdateZip ()
         {
-            const string zipFile = "../download/odict.zip";
+            string zipFile = server.MapPath(zipPath);
 
             UpdateFile (zipFile, () => 
                 {
                      using (var zip = new ZipFile())
                      {
                          zip.AddFile(ZalizniakFilePath, "");
-                         zip.Save(CombinePath (zipFile));
+                         zip.Save(zipFile);
                      }
                 }
             );

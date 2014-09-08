@@ -7,7 +7,7 @@ namespace odict.ru
 {
     static class DawgBuilder
     {
-        public static void BuildModels(IEnumerable<KeyValuePair<string, string>> zalizniak, string outputFileName)
+        public static void BuildReverse(IEnumerable<KeyValuePair<string, string>> zalizniak, string outputFileName)
         {
             using (FileStream ModelsFile = File.Create(outputFileName))
             {
@@ -26,7 +26,7 @@ namespace odict.ru
             }
         }
 
-        public static void BuildDictForSearch(IEnumerable<KeyValuePair<string, string>> zalizniak, string outputFileName)
+        public static void BuildForward(IEnumerable<KeyValuePair<string, string>> zalizniak, string outputFileName)
         {
             using (FileStream DictSearchFile = File.Create(outputFileName))
             {
