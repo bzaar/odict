@@ -10,6 +10,7 @@ namespace odict.ru.add
             if (IsPostBack)
             {
                 string NewLine = DictionaryHelper.RemoveStressMarks(lemma.Text) + " " + selectedRule.Text;
+                int StressPos = -1;
 
                 if (String.IsNullOrEmpty(lemma.Text))
                 {
@@ -19,6 +20,11 @@ namespace odict.ru.add
                 else if (!DictionaryHelper.CheckStressPosition (lemma.Text))
                 {
                     message.Text = "Укажите ударение. Например: приве*т.";
+                    message.CssClass = "messageError";
+                }
+                else if (!int.TryParse(selectedRule.Text.Substring(0, selectedRule.Text.IndexOf(" ")), out StressPos) || StressPos > DictionaryHelper.RemoveStressMarks(lemma.Text).Length)
+                {
+                    message.Text = "Позиция ударения в правиле превышает длину слова.";
                     message.CssClass = "messageError";
                 }
                 else

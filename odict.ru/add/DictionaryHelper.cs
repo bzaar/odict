@@ -5,7 +5,7 @@ namespace odict.ru.add
     public static class DictionaryHelper
     {
         public const string StressMark = "*";
-        public const string RuleLineDelimiter = "=";
+        public const string RuleLineDelimiter = "\t";
 
         public static bool CheckStressPosition(string text)
         {

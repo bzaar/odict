@@ -25,14 +25,21 @@
         //}
 
         var words = [];
-
+        var lemmaLastValue;
         wordSuggestions.prototype.requestSuggestions = function (oAutoSuggestControl /*:AutoSuggestControl*/,
-                                                                 bTypeAhead /*:boolean*/) {
+                                                                 bTypeAhead /*:boolean*/,
+                                                                 textValue) {
 //            writeToConsole("requestSuggestions()");
+            var lemmaText = (textValue || textValue === "" ? textValue : oAutoSuggestControl.textbox.value).trim();
+            if (lemmaLastValue === lemmaText) {
+                return;
+            }
+            lemmaLastValue = lemmaText;
+            lemmaText = lemmaText.replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "")
+
             clearLineForms();
 
-            var lemmaText = document.getElementById("<%= lemma.ClientID %>").value.trim().replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "");
-            document.getElementById("line").innerHTML = lemmaText;
+            //document.getElementById("line").innerHTML = lemmaText;
 
             getRules(lemmaText);
 
@@ -63,11 +70,6 @@
                                 }
                             }
                         }
-
-                        //if (aSuggestions.length === 1 && aSuggestions[0].toLowerCase() === sTextboxValue.toLowerCase()) {
-                        //    aSuggestions.pop();
-                        //}
-
                         //provide suggestions to the control
                         oAutoSuggestControl.autosuggest(aSuggestions, false);
                     }
@@ -111,16 +113,12 @@
                         for (var ruleIndex = 0; ruleIndex < rulesArray.length; ruleIndex++) {
                             var newRule = document.createElement("option");
                             newRule.text = rulesArray[ruleIndex];
+                            newRule.value = rulesArray[ruleIndex];
                             rulesElement.add(newRule);
                         }
                     }
-                    if (rulesElement.length > 0) {
-                        rulesElement.style.display = "block";
-                        rulesElement.size = Math.max(rulesElement.length, 2);
-                    }
-                    else {
-                        rulesElement.style.display = "none";
-                    }
+                    rulesElement.selectedIndex = -1;
+                    rulesElement.style.display = rulesElement.length ? "block" : "none";
                     rulesRequest = null;
                 }
             }
@@ -129,7 +127,6 @@
             xmlhttp.send();
         }
 
-        //var lemmaTextbox;
         function onloadpage() {
             //writeToConsole(navigator.appVersion);
             var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
@@ -200,17 +197,18 @@
         function placeStressMark() {
             var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
             var selectedRuleValue = document.getElementById("<%= selectedRule.ClientID %>").value;
-            var streesPos = +selectedRuleValue.substr(0, selectedRuleValue.indexOf(" "));
+            var stressPos = +selectedRuleValue.substr(0, selectedRuleValue.indexOf(" "));
 
             var lemmaElementValue = lemmaElement.value.replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "");
-            if (streesPos > 0) {
-                lemmaElementValue = lemmaElementValue.substr(0, streesPos) + "<%= odict.ru.add.DictionaryHelper.StressMark %>" + lemmaElementValue.substr(streesPos);
+            if (stressPos > 0 && stressPos <= lemmaElementValue.length) {
+                lemmaElementValue = lemmaElementValue.substr(0, stressPos) + "<%= odict.ru.add.DictionaryHelper.StressMark %>" + lemmaElementValue.substr(stressPos);
             }
             lemmaElement.value = lemmaElementValue;
+            lemmaLastValue = lemmaElementValue;
         }
         function selectRule() {
             var rulesElement = document.getElementById("rules");
-            getLineForms(rulesElement.innerText || rulesElement.value, false);
+            getLineForms(rulesElement.options[rulesElement.selectedIndex].value, false);
         }
         function focusRule() {
             var rulesElement = document.getElementById("rules");
@@ -248,28 +246,25 @@
                 }
             }
 
-            getLineForms(document.getElementById("line").innerHTML + " " + selectedRuleValue, true);
+            getLineForms(document.getElementById("<%= lemma.ClientID %>").value.replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "") + " " + selectedRuleValue, true);
         }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <asp:Label ID="message" CssClass="topMessage" runat="server"></asp:Label>
-    <div class="block">
-        <asp:TextBox ID="lemma" CssClass="lemma-textbox" runat="server" />
-        <div>
-            <div class="linediv">
-                <span id="line" ></span>&nbsp;<asp:TextBox ID="selectedRule" onkeyup="ruleChange()" runat="server"></asp:TextBox>
-            </div>
-            <div>
-                <asp:Button ID="submitAdd" UseSubmitBehavior="false" OnClientClick="this.disabled = true" CssClass="submitAdd" Text="Добавить" runat="server" />
-            </div>
-            <div id="forms" class="forms"></div>
-        </div>
+    <div class="block div250">
+        <asp:TextBox ID="lemma" CssClass="lemma-textbox width100pr" runat="server" />
+    </div>
+    <div class="block div400 lmargin10px">
+        <asp:TextBox ID="selectedRule" onkeyup="ruleChange()" CssClass="width100pr" runat="server"></asp:TextBox>
+        <br />
+        <select id="rules" class="ruleslist width100pr" onchange="selectRule()" ondblclick="selectRule()" onfocus="focusRule()" onkeydown="return nextByKeyDown(event, '<%= selectedRule.ClientID %>')" size="1"></select>        
     </div>
     <div class="block lmargin10px">
-        <select id="rules" class="ruleslist" onchange="selectRule()" ondblclick="selectRule()" onfocus="focusRule()" onkeydown="return nextByKeyDown(event, '<%= selectedRule.ClientID %>')" size="2"></select>        
+        <asp:Button ID="submitAdd" UseSubmitBehavior="false" OnClientClick="this.disabled = true" CssClass="submitAdd width100pr" Text="Добавить" runat="server" />
     </div>
     <div class="clearblock">
+        <div id="forms" class="forms"></div>
     </div>
 <%--    <div id="console" style="color:red;font-size:small">  
     </div>--%>

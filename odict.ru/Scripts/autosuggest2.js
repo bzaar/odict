@@ -222,10 +222,10 @@ AutoSuggestControl.prototype.init = function () {
     var oThis = this;
     
     this.textbox.oncut = function (oEvent) {
-        oThis.onChange();
+        oThis.provider.requestSuggestions(oThis, false, "");
     };
     this.textbox.onpaste = function (oEvent) {
-        oThis.onChange();
+        oThis.provider.requestSuggestions(oThis, false, oEvent.clipboardData.getData("text"));
     };
 
     //assign the onkeyup event handler
