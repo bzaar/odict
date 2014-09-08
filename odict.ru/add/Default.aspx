@@ -258,7 +258,7 @@
     <div class="block div400 lmargin10px">
         <asp:TextBox ID="selectedRule" onkeyup="ruleChange()" CssClass="width100pr" runat="server"></asp:TextBox>
         <br />
-        <select id="rules" class="ruleslist width100pr" onchange="selectRule()" ondblclick="selectRule()" onfocus="focusRule()" onkeydown="return nextByKeyDown(event, '<%= selectedRule.ClientID %>')" size="1"></select>        
+        <select id="rules" class="ruleslist width100pr" onchange="selectRule()" ondblclick="selectRule()" onfocus="focusRule()" onkeydown="return nextByKeyDown(event, '<%= selectedRule.ClientID %>')" size="4"></select>        
     </div>
     <div class="block lmargin10px">
         <asp:Button ID="submitAdd" UseSubmitBehavior="false" OnClientClick="this.disabled = true" CssClass="submitAdd width100pr" Text="Добавить" runat="server" />
