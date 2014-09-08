@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Ionic.Zip;
 
 namespace odict.ru
 {
@@ -35,17 +36,25 @@ namespace odict.ru
         {
             UpdateIndex (forwardDawg, DawgBuilder.BuildDictForSearch);
             UpdateIndex (reverseDawg, DawgBuilder.BuildModels);
+            UpdateZip ();
         }
 
         void UpdateIndex (string filename, Action <IEnumerable <KeyValuePair <string, string>>, string> rebuild)
         {
-            string indexFilePath = CombinePath (filename);
+            UpdateFile (filename,
+                        () =>
+                        rebuild (
+                            DawgBuilder.GetZalizniak (File.ReadAllLines (ZalizniakFilePath, zalizniakFileEncoding)),
+                            CombinePath (filename)));
+        }
 
-            if (!File.Exists (indexFilePath) || File.GetLastWriteTime (ZalizniakFilePath) > File.GetLastWriteTime (indexFilePath))
+        void UpdateFile (string filename, Action rebuild)
+        {
+            string filePath = CombinePath (filename);
+
+            if (!File.Exists (filePath) || File.GetLastWriteTime (ZalizniakFilePath) > File.GetLastWriteTime (filePath))
             {
-                new Task (() => 
-                    rebuild (DawgBuilder.GetZalizniak (File.ReadAllLines (ZalizniakFilePath, zalizniakFileEncoding)), indexFilePath)
-                ).Start ();
+                new Task (rebuild).Start ();
             }
         }
 
@@ -72,6 +81,21 @@ namespace odict.ru
         public bool FileExists ()
         {
             return File.Exists (ZalizniakFilePath);
+        }
+
+        public void UpdateZip ()
+        {
+            const string zipFile = "../download/odict.zip";
+
+            UpdateFile (zipFile, () => 
+                {
+                     using (var zip = new ZipFile())
+                     {
+                         zip.AddFile(ZalizniakFilePath, "");
+                         zip.Save(CombinePath (zipFile));
+                     }
+                }
+            );
         }
     }
 }
