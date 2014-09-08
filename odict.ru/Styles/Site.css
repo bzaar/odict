@@ -93,7 +93,7 @@ first child of the left and right table columns */
 
 .page
 {
-    max-width: 960px;
+    max-width: 790px;
     margin: 10px auto 0px auto;
 }
 
@@ -332,7 +332,6 @@ div.accountInfo
 .lemma-textbox
 {
     margin: 0px;
-    padding: 0px;
 }
 .block
 {
@@ -349,7 +348,6 @@ div.accountInfo
 }
 .submitAdd
 {
-    margin-top:5px;
 }
 .linediv
 {
