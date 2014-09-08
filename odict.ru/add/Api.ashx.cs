@@ -72,7 +72,7 @@ namespace odict.ru.add
         {
             using (Stream ReverseDict = new FileBasedDictionary (Context.Server).OpenReverseIndex ())
             {
-                string PrefixText = DictionaryHelper.RemoveStressMarks(prefixText);
+                var PrefixText = DictionaryHelper.RemoveStressMarks(prefixText).ToLowerInvariant ().Reverse();
 
                 Dawg<string> Dawg = Dawg<string>.Load(ReverseDict,
                     Func =>
@@ -81,9 +81,9 @@ namespace odict.ru.add
                         return s == String.Empty ? null : s;
                     });
 
-                int PrefixLen = Dawg.GetLongestCommonPrefixLength(PrefixText.Reverse());
+                int PrefixLen = Dawg.GetLongestCommonPrefixLength(PrefixText);
 
-                WriteJSONToResponse(Dawg.MatchPrefix(PrefixText.Reverse().Take(PrefixLen))
+                WriteJSONToResponse(Dawg.MatchPrefix(PrefixText.Take(PrefixLen))
                     .GroupBy(kvp => kvp.Value, kvp => kvp)
                     .SelectMany(g => g.Take(1))
                     .Select(kvp => kvp.Value + DictionaryHelper.RuleLineDelimiter + new string(kvp.Key.Reverse().ToArray()))

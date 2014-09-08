@@ -15,7 +15,7 @@ namespace odict.ru
 
                 foreach (var entry in zalizniak)
                 {
-                    string lemma = entry.Key;
+                    string lemma = entry.Key.ToLowerInvariant ();
 
                     dict.Insert(lemma.Reverse(), entry.Value);
                 }
@@ -34,7 +34,7 @@ namespace odict.ru
 
                 foreach (var entry in zalizniak)
                 {
-                    string lemma = entry.Key;
+                    string lemma = entry.Key.ToLowerInvariant ();
 
                     dict.Insert(lemma, true);
                 }

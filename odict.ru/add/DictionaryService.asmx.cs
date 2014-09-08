@@ -22,7 +22,7 @@ namespace odict.ru.add
             {
                 var dict = DawgSharp.Dawg<bool>.Load(ForwardDict, r => r.ReadBoolean());
 
-                return dict.MatchPrefix (DictionaryHelper.RemoveStressMarks(prefixText)).Take (10).Select (kvp => kvp.Key).ToArray ();
+                return dict.MatchPrefix (DictionaryHelper.RemoveStressMarks(prefixText.ToLowerInvariant ())).Take (10).Select (kvp => kvp.Key).ToArray ();
             }
         }
     }
