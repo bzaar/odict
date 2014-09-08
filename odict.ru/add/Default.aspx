@@ -230,8 +230,8 @@
         function nextByKeyDown(event, nextId) {
             var keyCode = event.keyCode ? event.keyCode : event.charCode;
             var next = document.getElementById(nextId);
-            if ([9, 13].indexOf(keyCode) !== -1) {
-                next.focus();
+            if (keyCode === 13) {
+                    next.focus();
                 return false;
             }
         }
@@ -262,15 +262,15 @@
         <asp:Label ID="message" runat="server"></asp:Label>
     </div>
     <div class="block div250">
-        <asp:TextBox ID="lemma" CssClass="lemma-textbox width100pr" runat="server" />
+        <asp:TextBox ID="lemma" CssClass="lemma-textbox width100pr" TabIndex="1" runat="server" />
     </div>
     <div class="block div400 lmargin10px">
-        <asp:TextBox ID="selectedRule" onkeyup="ruleChange()" CssClass="width100pr" runat="server"></asp:TextBox>
+        <asp:TextBox ID="selectedRule" onkeyup="ruleChange()" TabIndex="3" CssClass="width100pr" runat="server"></asp:TextBox>
         <br />
-        <select id="rules" class="ruleslist width100pr" onchange="selectRule()" ondblclick="selectRule()" onfocus="focusRule()" onkeydown="return nextByKeyDown(event, '<%= selectedRule.ClientID %>')" size="4"></select>        
+        <select id="rules" class="ruleslist width100pr" tabindex="2" onchange="selectRule()" ondblclick="selectRule()" onfocus="focusRule()" onkeydown="return nextByKeyDown(event, '<%= selectedRule.ClientID %>')" size="4"></select>        
     </div>
     <div class="block lmargin10px">
-        <asp:Button ID="submitAdd" UseSubmitBehavior="false" OnClientClick="this.disabled = true" CssClass="submitAdd width100pr" Text="Добавить" runat="server" />
+        <asp:Button ID="submitAdd" UseSubmitBehavior="false" TabIndex="4" OnClientClick="this.disabled = true" CssClass="submitAdd width100pr" Text="Добавить" runat="server" />
     </div>
     <div class="clearblock">
         <div id="forms" class="forms"></div>

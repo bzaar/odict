@@ -140,7 +140,6 @@ AutoSuggestControl.prototype.getTop = function () /*:int*/ {
  * @param oEvent The event object for the keydown event.
  */
 AutoSuggestControl.prototype.handleKeyDown = function (oEvent /*:Event*/) {
-    var result = true;
     switch (oEvent.keyCode) {
         case 38: //up arrow
             this.previousSuggestion();
@@ -148,14 +147,10 @@ AutoSuggestControl.prototype.handleKeyDown = function (oEvent /*:Event*/) {
         case 40: //down arrow 
             this.nextSuggestion();
             break;
-        case 9:
-            result = false;
         case 13: //enter
-            //this.hideSuggestions();
             if (this.oNextControl) {
                 this.oNextControl.focus();
             }
-            return result;
         case 27:
             this.hideSuggestions();
             break;
@@ -225,7 +220,7 @@ AutoSuggestControl.prototype.init = function () {
         oThis.provider.requestSuggestions(oThis, false, "");
     };
     this.textbox.onpaste = function (oEvent) {
-        oThis.provider.requestSuggestions(oThis, false, oEvent.clipboardData.getData("text"));
+        oThis.provider.requestSuggestions(oThis, false, (oEvent.clipboardData || window.clipboardData).getData("text"));
     };
 
     //assign the onkeyup event handler
