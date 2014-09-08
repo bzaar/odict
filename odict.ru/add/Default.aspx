@@ -159,7 +159,7 @@
             var stressPosition = text.indexOf("<%= odict.ru.add.DictionaryHelper.StressMark %>");
             
             return stressPosition > 0 // is strees mark specified and it's position after the first letter
-                && ["<%= String.Join("\",\"", odict.ru.add.DictionaryHelper.Vowels) %>"].indexOf(text[stressPosition - 1]) !== -1; //previous letter has to be a vowel
+                && "<%= Slepov.Russian.Syllable.LowercaseVowels %>".indexOf(text[stressPosition - 1]) !== -1; //previous letter has to be a vowel
         }
         function getLineForms(ruleValue, formsOnly) {
             clearLineForms();
