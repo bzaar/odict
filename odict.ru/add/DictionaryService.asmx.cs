@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.Services;
 
@@ -18,11 +19,18 @@ namespace odict.ru.add
         [System.Web.Script.Services.ScriptMethod]
         public string [] GetCompletionList (string prefixText, int count)
         {
-            using (Stream ForwardDict = new FileBasedDictionary (Server).OpenForwardIndex ()) 
+            try
             {
-                var dict = DawgSharp.Dawg<bool>.Load(ForwardDict, r => r.ReadBoolean());
+                using (Stream ForwardDict = new FileBasedDictionary(Server).OpenForwardIndex())
+                {
+                    var dict = DawgSharp.Dawg<bool>.Load(ForwardDict, r => r.ReadBoolean());
 
-                return dict.MatchPrefix (DictionaryHelper.RemoveStressMarks(prefixText)).Take (10).Select (kvp => kvp.Key).ToArray ();
+                    return dict.MatchPrefix(DictionaryHelper.RemoveStressMarks(prefixText).ToLowerInvariant()).Take(10).Select(kvp => kvp.Key).ToArray();
+                }
+            }
+            catch (Exception exp)
+            {
+                return new string[] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." };//exp.Message };
             }
         }
     }

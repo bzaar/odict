@@ -30,6 +30,11 @@
                                                                  bTypeAhead /*:boolean*/,
                                                                  textValue) {
 //            writeToConsole("requestSuggestions()");
+            if (isTopMessageShown) {
+                document.getElementById("<%= message.ClientID %>").style.display = "none";
+                isTopMessageShown = false;
+            }
+
             var lemmaText = (textValue || textValue === "" ? textValue : oAutoSuggestControl.textbox.value).trim();
             if (lemmaLastValue === lemmaText) {
                 return;
@@ -127,6 +132,7 @@
             xmlhttp.send();
         }
 
+        var isTopMessageShown;
         function onloadpage() {
             //writeToConsole(navigator.appVersion);
             var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
@@ -140,7 +146,8 @@
             setSubmitAvailability(false);
 
             var messageElement = document.getElementById("<%= message.ClientID %>");
-            messageElement.style.display = messageElement.innerHTML ? "block" : "none";
+            isTopMessageShown = !!messageElement.innerHTML;
+            messageElement.style.display = isTopMessageShown ? "block" : "none";
         }
         window.onload = onloadpage;
 
@@ -251,7 +258,9 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:Label ID="message" CssClass="topMessage" runat="server"></asp:Label>
+    <div class="divTopMessage">
+        <asp:Label ID="message" runat="server"></asp:Label>
+    </div>
     <div class="block div250">
         <asp:TextBox ID="lemma" CssClass="lemma-textbox width100pr" runat="server" />
     </div>

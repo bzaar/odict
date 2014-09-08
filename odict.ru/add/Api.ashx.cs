@@ -40,9 +40,9 @@ namespace odict.ru.add
                 Forms = FormGenerator.GetAccentedForms(rule, delegate { })
                     .Select(Func => HttpUtility.HtmlEncode(Func.AccentedForm)).ToArray();
             }
-            catch
+            catch (Exception exp)
             {
-                Forms = new string[] { };
+                Forms = new string[] { exp.Message };
             }
 
             return Forms;
@@ -70,25 +70,34 @@ namespace odict.ru.add
 
         protected void GetRules(string prefixText)
         {
-            using (Stream ReverseDict = new FileBasedDictionary (Context.Server).OpenReverseIndex ())
+            Dawg<string> Dawg = null;
+            var PrefixText = DictionaryHelper.RemoveStressMarks(prefixText).ToLowerInvariant ().Reverse();
+            
+            try
             {
-                string PrefixText = DictionaryHelper.RemoveStressMarks(prefixText);
+                using (Stream ReverseDict = new FileBasedDictionary(Context.Server).OpenReverseIndex())
+                {
+                    Dawg = Dawg<string>.Load(ReverseDict,
+                        Func =>
+                        {
+                            string s = Func.ReadString();
+                            return s == String.Empty ? null : s;
+                        });
+                }
+                
+                int PrefixLen = Dawg.GetLongestCommonPrefixLength(PrefixText);
 
-                Dawg<string> Dawg = Dawg<string>.Load(ReverseDict,
-                    Func =>
-                    {
-                        string s = Func.ReadString();
-                        return s == String.Empty ? null : s;
-                    });
-
-                int PrefixLen = Dawg.GetLongestCommonPrefixLength(PrefixText.Reverse());
-
-                WriteJSONToResponse(Dawg.MatchPrefix(PrefixText.Reverse().Take(PrefixLen))
+                WriteJSONToResponse(Dawg.MatchPrefix(PrefixText.Take(PrefixLen))
                     .GroupBy(kvp => kvp.Value, kvp => kvp)
                     .SelectMany(g => g.Take(1))
                     .Select(kvp => kvp.Value + DictionaryHelper.RuleLineDelimiter + new string(kvp.Key.Reverse().ToArray()))
                     .Take(10)
                     .ToArray());
+            }
+            catch (Exception exp)
+            {
+                WriteJSONToResponse(new string[] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." });//exp.Message });
+                return;
             }
         }
 

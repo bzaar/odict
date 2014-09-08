@@ -93,7 +93,7 @@ first child of the left and right table columns */
 
 .page
 {
-    max-width: 790px;
+    max-width: 810px;
     margin: 10px auto 0px auto;
 }
 
@@ -335,16 +335,18 @@ div.accountInfo
 }
 .block
 {
-    margin-top:30px;
+    margin-top:10px;
     float: left;
 }
 .lmargin10px
 {
     margin-left:10px;
 }
-.topMessage
+.divTopMessage
 {
-    position:absolute;
+    text-align:center;
+    margin: 0px auto 0px auto;
+    min-height: 40px;
 }
 .submitAdd
 {
