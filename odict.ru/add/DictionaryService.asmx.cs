@@ -25,12 +25,16 @@ namespace odict.ru.add
                 {
                     var dict = DawgSharp.Dawg<bool>.Load(ForwardDict, r => r.ReadBoolean());
 
+<<<<<<< HEAD
                     return dict.MatchPrefix(DictionaryHelper.RemoveStressMarks(prefixText).ToLowerInvariant()).Take(10).Select(kvp => kvp.Key).ToArray();
                 }
             }
             catch (Exception exp)
             {
                 return new string[] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." };//exp.Message };
+=======
+                return dict.MatchPrefix (DictionaryHelper.RemoveStressMarks(prefixText.ToLowerInvariant ())).Take (10).Select (kvp => kvp.Key).ToArray ();
+>>>>>>> origin/master
             }
         }
     }
