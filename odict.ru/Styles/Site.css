@@ -298,29 +298,6 @@ div.accountInfo
 
 /* LAYOUT
 ----------------------------------------------------------*/
-.center 
-{
-    margin-left:50%;
-}
-.centerpane
-{
-    margin-top:20px;
-    margin-left:-300px;
-    width:600px;
-}
-.stressButton
-{
-    margin-left:10px;
-}
-.leftpane
-{
-    float:left;
-}
-.rightpane
-{
-    margin-left:10px;
-    float:left;
-}
 .clearblock
 {
     clear:both;
@@ -342,12 +319,6 @@ div.accountInfo
 {
     margin-left:10px;
 }
-.divTopMessage
-{
-    text-align:center;
-    margin: 0px auto 0px auto;
-    min-height: 40px;
-}
 .submitAdd
 {
 }
@@ -360,13 +331,18 @@ div.accountInfo
 {
     margin-top:20px;
 }
+.divMessage
+{
+    text-align:center;
+    margin: 0px auto 0px auto;
+}
 .messageSuccess
 {
-    color:#029a0a;
+    color: #3d3;
 }
 .messageError
 {
-    color:#ff3322;
+    color: #d33;
 }
 .div250
 {

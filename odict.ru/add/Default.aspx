@@ -29,10 +29,10 @@
         wordSuggestions.prototype.requestSuggestions = function (oAutoSuggestControl /*:AutoSuggestControl*/,
                                                                  bTypeAhead /*:boolean*/,
                                                                  textValue) {
-//            writeToConsole("requestSuggestions()");
-            if (isTopMessageShown) {
-                document.getElementById("<%= message.ClientID %>").style.display = "none";
-                isTopMessageShown = false;
+            //            writeToConsole("requestSuggestions()");
+            if (isMessageShown) {
+                document.getElementById("<%= messageContainer.ClientID %>").style.display = "none";
+                isMessageShown = false;
             }
 
             var lemmaText = (textValue || textValue === "" ? textValue : oAutoSuggestControl.textbox.value).trim();
@@ -132,7 +132,7 @@
             xmlhttp.send();
         }
 
-        var isTopMessageShown;
+        var isMessageShown;
         function onloadpage() {
             //writeToConsole(navigator.appVersion);
             var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
@@ -141,13 +141,19 @@
             rulesElement.style.display = "none";
             new AutoSuggestControl(lemmaElement, new wordSuggestions(), selectWord, rulesElement);//, writeToConsole);
 
-            document.getElementById('<%= selectedRule.ClientID %>').onkeydown = function(event) { return nextByKeyDown(event, '<%= submitAdd.ClientID %>') };
+            document.getElementById('<%= selectedRule.ClientID %>').onkeydown = function (event) { return nextByKeyDown(event, '<%= submitAdd.ClientID %>') };
 
             setSubmitAvailability(false);
 
-            var messageElement = document.getElementById("<%= message.ClientID %>");
-            isTopMessageShown = !!messageElement.innerHTML;
-            messageElement.style.display = isTopMessageShown ? "block" : "none";
+            var messageContainerElement = document.getElementById("<%= messageContainer.ClientID %>");
+            isMessageShown = !!document.getElementById("<%= message.ClientID %>").innerHTML;
+            messageContainerElement.style.display = isMessageShown ? "block" : "none";
+
+            if (this.__is__Mobile) {
+                var pageElement = document.getElementById("page");
+                pageElement.insertBefore(pageElement.removeChild(messageContainerElement), document.getElementById("clearblock"));
+                document.getElementById("rules").size = 1;
+            }
         }
         addLoadEvent(onloadpage);
         function selectWord() {
@@ -159,7 +165,7 @@
         }
         function checkStressPosition(text) {
             var stressPosition = text.indexOf("<%= odict.ru.add.DictionaryHelper.StressMark %>");
-            
+
             return stressPosition > 0 // is strees mark specified and it's position after the first letter
                 && "<%= Slepov.Russian.Syllable.LowercaseVowels %>".indexOf(text[stressPosition - 1].toLowerCase()) !== -1; //previous letter has to be a vowel
         }
@@ -195,7 +201,7 @@
                     }
                 }
             }
-            
+
             xmlhttp.open("GET", "/api?action=get" + (!formsOnly ? "lineforms&lemma=" + encodeURI(lemmaValue) : "forms") + "&rule=" + encodeURIComponent(ruleValue), true);
             xmlhttp.send();
         }
@@ -229,23 +235,23 @@
             var keyCode = event.keyCode ? event.keyCode : event.charCode;
             var next = document.getElementById(nextId);
             if (keyCode === 13) {
-                    next.focus();
+                next.focus();
                 return false;
             }
         }
         var lastSelectedRuleValue = null;
         function ruleChange() {
             var selectedRuleValue = document.getElementById("<%= selectedRule.ClientID %>").value.trim();
-            
+
             if (lastSelectedRuleValue === selectedRuleValue) {
                 return;
             }
             lastSelectedRuleValue = selectedRuleValue;
-            
+
             var rulesElement = document.getElementById("rules");
             placeStressMark();
             rulesElement.selectedIndex = -1;
-            for (var ruleIndex = 0; ruleIndex < rulesElement.length; ruleIndex++) {   
+            for (var ruleIndex = 0; ruleIndex < rulesElement.length; ruleIndex++) {
                 if (selectedRuleValue.trim() === rulesElement.options[ruleIndex].value.substr(0, rulesElement.options[ruleIndex].value.indexOf("<%= odict.ru.add.DictionaryHelper.RuleLineDelimiter %>"))) {
                     rulesElement.selectedIndex = ruleIndex;
                 }
@@ -256,9 +262,9 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div id="topMessageContainer" class="divTopMessage">
+    <asp:Panel ID="messageContainer" CssClass="divMessage" runat="server">
         <asp:Label ID="message" runat="server"></asp:Label>
-    </div>
+    </asp:Panel>
     <div class="block div250">
         <asp:TextBox ID="lemma" CssClass="lemma-textbox width100pr" TabIndex="1" runat="server" />
     </div>

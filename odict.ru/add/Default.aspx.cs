@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Web.UI;
 
+using System.Web.UI.HtmlControls;
+using System.IO;
+
 namespace odict.ru.add
 {
     public partial class Default : Page
@@ -12,33 +15,35 @@ namespace odict.ru.add
                 MasterPageFile = "~/Mobile.Master";
             }
         }
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (IsPostBack)
             {
                 string NewLine = DictionaryHelper.RemoveStressMarks(lemma.Text) + " " + selectedRule.Text;
                 int StressPos = -1;
+                string messageText;
+                string messageStyle;
 
                 if (String.IsNullOrEmpty(lemma.Text))
                 {
-                    message.Text = "Введите слово.";
-                    message.CssClass = "messageError";
+                    messageText = "Введите слово.";
+                    messageStyle = "messageError";
                 }
                 else if (!DictionaryHelper.CheckStressPosition (lemma.Text))
                 {
-                    message.Text = "Укажите ударение. Например: приве*т.";
-                    message.CssClass = "messageError";
+                    messageText = "Укажите ударение. Например: приве*т.";
+                    messageStyle = "messageError";
                 }
                 else if (!int.TryParse(selectedRule.Text.Substring(0, selectedRule.Text.IndexOf(" ")), out StressPos) || StressPos > DictionaryHelper.RemoveStressMarks(lemma.Text).Length)
                 {
-                    message.Text = "Позиция ударения в правиле превышает длину слова.";
-                    message.CssClass = "messageError";
+                    messageText = "Позиция ударения в правиле превышает длину слова.";
+                    messageStyle = "messageError";
                 }
                 else
                 {
-                    message.Text = "Статья \"" + NewLine + "\" добавлена в словарь.";
-                    message.CssClass = "messageSuccess";
+                    messageText = "Статья \"" + NewLine + "\" добавлена в словарь.";
+                    messageStyle = "messageSuccess";
 
                     lemma.Text = String.Empty;
                     selectedRule.Text = String.Empty;
@@ -48,6 +53,9 @@ namespace odict.ru.add
                     fileBasedDictionary.AddEntry (NewLine);
                     fileBasedDictionary.UpdateIndices ();
                 }
+
+                message.Text = messageText;
+                messageContainer.CssClass = "divMessage " + messageStyle; 
             }
         }
     }

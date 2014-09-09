@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 
-<html id="html" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
@@ -21,14 +21,7 @@
                 }
             }
         }
-        function onloadpagemaster() {
-            // in future it will be 2 separated pages
-//            document.getElementById("html").style.height = screen.height;
-            var pageElement = document.getElementById("page");
-            pageElement.insertBefore(pageElement.removeChild(document.getElementById("topMessageContainer")), document.getElementById("clearblock"));
-            document.getElementById("rules").size = 1;
-        }
-        addLoadEvent(onloadpagemaster);
+        this.__is__Mobile = true;
     </script>   
      <asp:ContentPlaceHolder ID="HeadContent" runat="server">
       
@@ -36,10 +29,11 @@
 </head>
 <body>
     <form id="form1" autocomplete="off" runat="server">
-    <div id="page" class="page">
-        <asp:ContentPlaceHolder ID="MainContent" runat="server">        
-        </asp:ContentPlaceHolder>
-    </div>
+        <div id="page" class="page">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">        
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
     <div class="footer">
         &copy; 2014 <a runat="server" href="~/">odict.ru</a>
     </div>
@@ -55,6 +49,5 @@
         ga('send', 'pageview');
 
     </script>
-    </form>
 </body>
 </html>
