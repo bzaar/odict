@@ -88,6 +88,8 @@
     <Content Include="add\Default.aspx" />
     <Content Include="add\DictionaryService.asmx" />
     <Content Include="add\help\Default.aspx" />
+    <Content Include="add\Images\add-submit-button-dis.png" />
+    <Content Include="add\Images\add-submit-button.png" />
     <Content Include="download\Default.aspx" />
     <Content Include="add\Api.ashx" />
     <None Include="EmailTemplate.htm" />

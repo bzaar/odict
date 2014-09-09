@@ -35,7 +35,7 @@ a:active
     color: #034af3;
 }
 
-input, select
+input[type=text], select
 {
     padding: 5px;
     border-radius: 5px;
@@ -95,23 +95,38 @@ input[type=text]:focus
 }
 .block
 {
+    text-align:center;
     margin-top:10px;
 }
 .lmargin10px
 {
 }
-.submitAdd
+.submitAdd 
 {
-    color:#000;
-    background:silver;
-    margin: 10px auto 10px auto;
+    margin:0px auto;
+    border:none;
+    display: -moz-inline-stack;
+    display: inline-block;
+    width: 141px !important;
+    height: 40px;
+    background: url('../add/Images/add-submit-button.png') no-repeat;
+    line-height: 40px;
+    vertical-align: middle;
+    text-align: center;
+    color: #ffffff;
+    font-family: Calibri;
+    font-size: 24px;
+    font-weight: bold;
+    font-style: normal;
+    text-shadow: #3c8236 1px 1px 0;
 }
-.submitAdd:disabled
+.submitAdd:disabled 
 {
-    color:silver;
-    background:#f5f5f5;
-    border-color:#e0e0e0;
-    margin: 10px auto 10px auto;
+    background: url('../add/Images/add-submit-button-dis.png') no-repeat;
+    border-color:#4e5766;
+}
+.submitAdd > span {
+   display: -moz-inline-block;
 }
 .linediv
 {
@@ -125,7 +140,7 @@ input[type=text]:focus
 .divMessage
 {
     text-align:center;
-    margin: 0px auto 0px auto;
+    margin: 15px auto 0px auto;
     border-radius: 3px;
     border: 2px solid;
 }
