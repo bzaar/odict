@@ -149,12 +149,10 @@
             isTopMessageShown = !!messageElement.innerHTML;
             messageElement.style.display = isTopMessageShown ? "block" : "none";
         }
-        window.onload = onloadpage;
-
+        addLoadEvent(onloadpage);
         function selectWord() {
             getRules(document.getElementById("<%= lemma.ClientID %>").value.trim());
         }
-
         function clearLineForms() {
             //document.getElementById("line").innerHTML = "";
             document.getElementById("forms").innerHTML = "";
@@ -258,7 +256,7 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="divTopMessage">
+    <div id="topMessageContainer" class="divTopMessage">
         <asp:Label ID="message" runat="server"></asp:Label>
     </div>
     <div class="block div250">
@@ -272,9 +270,9 @@
     <div class="block lmargin10px">
         <asp:Button ID="submitAdd" UseSubmitBehavior="false" TabIndex="4" OnClientClick="this.disabled = true" CssClass="submitAdd width100pr" Text="Добавить" runat="server" />
     </div>
-    <div class="clearblock">
+    <div id="clearblock" class="clearblock">
         <div id="forms" class="forms"></div>
     </div>
-<%--    <div id="console" style="color:red;font-size:small">  
-    </div>--%>
+    <div id="console" style="color:red;font-size:small">  
+    </div>
 </asp:Content>

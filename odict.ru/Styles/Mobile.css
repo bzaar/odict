@@ -6,8 +6,9 @@ body
     font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
     margin: 0px;
     padding: 0px;
-    color: #776969;
+    /*color: #776969;*/
     font-size :25px;
+    height:100%;
 }
 
 a:link, a:visited
@@ -26,11 +27,12 @@ a:active
     color: #034af3;
 }
 
-input
+input, select
 {
-    padding: 10px;
-    border:2px solid silver;
-    font-size:25px;
+    /*padding: 10px;*/
+    /*border:2px solid silver;*/
+    box-sizing:border-box;
+    font-size:20px;
 }
 input:focus
 {
@@ -40,27 +42,17 @@ input:focus
 /* PRIMARY LAYOUT ELEMENTS   
 ----------------------------------------------------------*/
 
-@media screen and (max-device-width: 480px) {
-    .page
-    {
-        margin:0px auto 0px auto;
-        border:1px solid red;
-        width:45%;
-        padding:10px;
-    }
-    input
-    {
-        width:90%;
-    }
+.page
+{
+    margin:0px 10px 0px 10px;
 }
 
 .footer
 {
     color: #4e5766;
-    padding: 8px 0px 1em 0px;
-    margin: 300px auto;
     text-align: center;
     line-height: normal;
+    margin:20px auto 10px auto;
 }
 
 
@@ -75,28 +67,17 @@ input:focus
 
 /* LAYOUT
 ----------------------------------------------------------*/
-.leftpane
-{
-    float:left;
-}
-.rightpane
-{
-    margin-left:10px;
-    float:left;
-}
 .clearblock
 {
     clear:both;
 }
 .ruleslist 
 {
-    width:100%;
-    
+    margin-top:10px;
 }
 .lemma-textbox
 {
     margin: 0px;
-    width:100%;
 }
 .block
 {
@@ -109,11 +90,9 @@ input:focus
 {
     text-align:center;
     margin: 0px auto 0px auto;
-    min-height: 40px;
 }
 .submitAdd
 {
-    width:50%;
     margin: 10px auto 10px auto;
 }
 .linediv
@@ -147,5 +126,5 @@ input:focus
 }
 .width100pr 
 {
-    width:80%;
+    width:100%;
 }

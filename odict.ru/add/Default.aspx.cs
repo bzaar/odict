@@ -7,7 +7,7 @@ namespace odict.ru.add
     {
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            if (Request.Browser.ScreenPixelsWidth < 800)
+            if (Request.Browser.IsMobileDevice && Request.Browser.ScreenPixelsWidth < 800)
             {
                 MasterPageFile = "~/Mobile.Master";
             }
