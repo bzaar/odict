@@ -47,9 +47,6 @@ namespace odict.ru
                 db.Replies.Add (new Reply
                 {
                     Email = email,
-                    WantsToUse = this.UseCheckBox.Checked,
-                    WantsToContribute = this.ContributeCheckBox.Checked,
-                    WantsToBuy = this.PayCheckBox.Checked,
                     DateTime = DateTime.UtcNow
                 });
 

@@ -13,33 +13,6 @@ namespace odict.ru {
     public partial class _Default {
         
         /// <summary>
-        /// UseCheckBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox UseCheckBox;
-        
-        /// <summary>
-        /// ContributeCheckBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ContributeCheckBox;
-        
-        /// <summary>
-        /// PayCheckBox control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox PayCheckBox;
-        
-        /// <summary>
         /// EmailTextBox control.
         /// </summary>
         /// <remarks>

@@ -93,7 +93,7 @@ first child of the left and right table columns */
 
 .page
 {
-    max-width: 810px;
+    max-width: 46em;
     margin: 10px auto 0px auto;
 }
 
@@ -122,14 +122,6 @@ first child of the left and right table columns */
     padding: 0px 12px;
     margin: 12px 8px 8px 8px;
     min-height: 420px;
-}
-
-.leftCol
-{
-    padding: 6px 0px;
-    margin: 12px 8px 8px 8px;
-    width: 200px;
-    min-height: 200px;
 }
 
 .footer
