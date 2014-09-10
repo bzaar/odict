@@ -74,7 +74,7 @@ namespace odict.ru
             return SharedOpenDictionary(CombinePath (filename));
         }
 
-        public static Stream SharedOpenDictionary(string fullFileName)
+        static Stream SharedOpenDictionary(string fullFileName)
         {
             return new FileStream(fullFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
