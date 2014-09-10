@@ -90,7 +90,6 @@
     <Content Include="add\help\Default.aspx" />
     <Content Include="add\Images\add-submit-button-dis.png" />
     <Content Include="add\Images\add-submit-button.png" />
-    <Content Include="download\Default.aspx" />
     <Content Include="add\Api.ashx" />
     <None Include="EmailTemplate.htm" />
     <Content Include="Global.asax" />
@@ -145,13 +144,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="FileBasedDictionary.cs" />
-    <Compile Include="download\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="download\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="DbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -211,6 +203,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="download\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
