@@ -205,10 +205,22 @@
             xmlhttp.open("GET", "/api?action=get" + (!formsOnly ? "lineforms&lemma=" + encodeURI(lemmaValue) : "forms") + "&rule=" + encodeURIComponent(ruleValue), true);
             xmlhttp.send();
         }
+        function indexOfAny(source, anyOf)
+        {
+            for (i = 0; i < source.length; i++)
+            {
+                for (j = 0; j < anyOf.length; j++)
+                {
+                    if (source.charAt(i) == anyOf.charAt(j))
+                        return i;
+                }
+            }
+            return -1;
+        }
         function placeStressMark() {
             var lemmaElement = document.getElementById("<%= lemma.ClientID %>");
             var selectedRuleValue = document.getElementById("<%= selectedRule.ClientID %>").value;
-            var stressPos = +selectedRuleValue.substr(0, selectedRuleValue.indexOf(" "));
+            var stressPos = +selectedRuleValue.substr(0, indexOfAny(selectedRuleValue, " ,."));
 
             var lemmaElementValue = lemmaElement.value.replace("<%= odict.ru.add.DictionaryHelper.StressMark %>", "");
             if (stressPos > 0 && stressPos <= lemmaElementValue.length) {

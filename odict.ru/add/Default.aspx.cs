@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Web.UI;
 
-using System.Web.UI.HtmlControls;
-using System.IO;
-
 namespace odict.ru.add
 {
     public partial class Default : Page
@@ -21,7 +18,7 @@ namespace odict.ru.add
             if (IsPostBack)
             {
                 string NewLine = DictionaryHelper.RemoveStressMarks(lemma.Text) + " " + selectedRule.Text;
-                int StressPos = -1;
+                int StressPos;
                 string messageText;
                 string messageStyle;
 
@@ -35,7 +32,7 @@ namespace odict.ru.add
                     messageText = "Укажите ударение. Например: приве*т.";
                     messageStyle = "messageError";
                 }
-                else if (!int.TryParse(selectedRule.Text.Substring(0, selectedRule.Text.IndexOf(" ")), out StressPos) || StressPos > DictionaryHelper.RemoveStressMarks(lemma.Text).Length)
+                else if (!int.TryParse(selectedRule.Text.Substring(0, selectedRule.Text.IndexOfAny(" ,.".ToCharArray ())), out StressPos) || StressPos > DictionaryHelper.RemoveStressMarks(lemma.Text).Length)
                 {
                     messageText = "Позиция ударения в правиле превышает длину слова.";
                     messageStyle = "messageError";
