@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="footer">
-            &copy; 2014 <a runat="server" href="~/">odict.ru</a>
+            &copy; 2014 <a runat="server" href="~/">oDict.ru</a>
         </div>
         <script type="text/javascript">
             (function (i, s, o, g, r, a, m) {

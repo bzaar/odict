@@ -293,4 +293,9 @@
     </div>
     <div id="console" style="color:red;font-size:small">  
     </div>
+    <ul style="margin-top: 2em">
+        <li><a href='help/'>Как добавить слово в словарь</a></li>
+        <li><a href='../pomety/'>Значения помет</a></li>
+        <li><a href='https://github.com/bzaar/odict/issues/new' target="_blank">Сообщить о проблеме</a></li>
+    </ul>
 </asp:Content>
