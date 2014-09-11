@@ -57,7 +57,6 @@
             margin-bottom: 1em;
             padding-top: 1em;
             padding-bottom: 1em;
-            border: 1px solid green;
         }
     </style>
 </asp:Content>
@@ -158,8 +157,7 @@
         <li><code>большой 6 п 4в @ _кф_ велИк, великА, великО, великИ; _сравн._ бОльше</code></li>
     </ul>
 
-
-    <h2>Подписаться на новости «Грамматического словаря»: </h2>
+    <h2>Подписаться на новости «Открытого словаря»: </h2>
 
     <p> Мы уведомим вас о новых крупных пополнениях словаря и улучшениях на сайте.
         Отписаться можно в любой момент по ссылке в письме.
@@ -186,4 +184,16 @@
         </div>
     </div>
 
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'odict';
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function () {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </asp:Content>
