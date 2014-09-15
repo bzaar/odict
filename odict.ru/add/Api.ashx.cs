@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.IO;
@@ -25,14 +23,14 @@ namespace odict.ru.add
             public string[] Forms;
         }
 
-        System.Web.HttpContext Context;
+        readonly HttpContext Context;
 
         public Api()
         {
-            Context = System.Web.HttpContext.Current;
+            Context = HttpContext.Current;
         }
         
-        private string[] GetFormsByRule(string rule)
+        private static string[] GetFormsByRule(string rule)
         {
             string[] Forms;
             try
@@ -42,7 +40,7 @@ namespace odict.ru.add
             }
             catch (Exception exp)
             {
-                Forms = new string[] { exp.Message };
+                Forms = new [] { exp.Message };
             }
 
             return Forms;
@@ -61,8 +59,8 @@ namespace odict.ru.add
             string Line = DictionaryHelper.RemoveStressMarks(lemma).ToLowerInvariant() + " " + 
                 (StressPos == -1 ? "?" : StressPos.ToString()) + GramInfo.Substring(GramInfo.IndexOf(' '));
 
-            WriteJSONToResponse(new LineForms()
-                {
+            WriteJSONToResponse(new LineForms
+                                    {
                     Line = Line,
                     Forms = GetFormsByRule(Line)
                 });
@@ -70,7 +68,7 @@ namespace odict.ru.add
 
         protected void GetRules(string prefixText)
         {
-            Dawg<string> Dawg = null;
+            Dawg<string> Dawg;
             var PrefixText = DictionaryHelper.RemoveStressMarks(prefixText).ToLowerInvariant ().Reverse();
             
             try
@@ -94,9 +92,9 @@ namespace odict.ru.add
                     .Take(10)
                     .ToArray());
             }
-            catch (Exception exp)
+            catch (Exception)
             {
-                WriteJSONToResponse(new string[] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." });//exp.Message });
+                WriteJSONToResponse(new [] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." });//exp.Message });
                 return;
             }
         }
@@ -105,12 +103,12 @@ namespace odict.ru.add
         {
             Context.Response.ContentType = "application/json";
 
-            MemoryStream RespData = new MemoryStream();
+            var RespData = new MemoryStream();
 
-            DataContractJsonSerializer Serializer = new DataContractJsonSerializer(typeof(T));
+            var Serializer = new DataContractJsonSerializer(typeof(T));
             Serializer.WriteObject(RespData, obj);
 
-            using (StreamReader Reader = new StreamReader(RespData))
+            using (var Reader = new StreamReader(RespData))
             {
                 RespData.Seek(0, SeekOrigin.Begin);
                 Context.Response.Write(Reader.ReadToEnd());
