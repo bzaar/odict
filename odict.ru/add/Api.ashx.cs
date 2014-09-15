@@ -32,19 +32,17 @@ namespace odict.ru.add
         
         private static string[] GetFormsByRule(string rule)
         {
-            string[] Forms;
             try
             {
-                Forms = FormGenerator.GetAccentedForms(rule, delegate { })
+                return FormGenerator.GetAccentedForms(rule, delegate { })
                     .Select(Func => HttpUtility.HtmlEncode(Func.AccentedForm)).ToArray();
             }
             catch (Exception exp)
             {
-                Forms = new [] { exp.Message };
+                return new [] { exp.Message };
             }
-
-            return Forms;
         }
+
         protected void GetForms(string rule)
         {
             WriteJSONToResponse(GetFormsByRule(rule));
