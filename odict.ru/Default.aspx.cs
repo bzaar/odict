@@ -39,8 +39,7 @@ namespace odict.ru
                 return;
             }
 
-
-            new SmtpClient ().Send (new MailMessage ("robot@odict.ru", "contact@morpher.ru", "oDict.ru Potential Customer", email));
+            Email.SendAdminEmail ("oDict.ru New Subscriber", email);
 
             using (var db = new DbContext ())
             {

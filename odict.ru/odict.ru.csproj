@@ -143,6 +143,7 @@
       <DependentUpon>DictionaryService.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Email.cs" />
     <Compile Include="FileBasedDictionary.cs" />
     <Compile Include="DbContext.cs" />
     <Compile Include="Global.asax.cs">

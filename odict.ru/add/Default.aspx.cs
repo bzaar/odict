@@ -49,6 +49,8 @@ namespace odict.ru.add
 
                     fileBasedDictionary.AddEntry (NewLine);
                     fileBasedDictionary.UpdateIndices ();
+
+                    Email.SendAdminEmail ("Новая статья: " + NewLine, NewLine);
                 }
 
                 message.Text = messageText;
