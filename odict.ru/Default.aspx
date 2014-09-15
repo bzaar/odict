@@ -4,52 +4,24 @@
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
     <style type="text/css">
-        li
-        {
-            text-indent: -2em;
-            margin-left: 10%;
-            margin-right: 10%;
-            text-align: left;
-        }
-
         h1
         {
             margin-top: 3em;
             margin-bottom: 2em;
         }
         
-        li label
-        {
-            margin-left: 1em;
-        }
-
-        input[type=checkbox]
-        {
-          /* Double-sized Checkboxes */
-          -ms-transform: scale(1.5); /* IE */
-          -moz-transform: scale(1.5); /* FF */
-          -webkit-transform: scale(1.5); /* Safari and Chrome */
-          -o-transform: scale(1.5); /* Opera */
-          padding: 10px;
-        }
-
-        input[type=submit]
-        {
-            font-size: 1.5em;
-            padding: 0.5em;
-        }
-        
-        .columns
+        ul.columns
         {
             width: 100%;
             clear: both;
         }
 
-        .columns li
+        ul.columns li
         {
+            margin-left: 10%;
+            margin-right: 10%;
             display: block;
             float: left;
-            padding-left: 0px;
             text-indent: 0px;
             text-align: center;
             width: 10em;
@@ -57,7 +29,7 @@
             margin-bottom: 1em;
             padding-top: 1em;
             padding-bottom: 1em;
-        }
+       }
     </style>
 </asp:Content>
 
@@ -157,6 +129,22 @@
         <li><code>большой 6 п 4в @ _кф_ велИк, великА, великО, великИ; _сравн._ бОльше</code></li>
     </ul>
 
+    <p> Топонимы на <b>-ино, цыно, -ово, -ево, -ёво</b> даны в словаре классическом склоняемом варианте: <b><code>Бородино 8 с 1в</code></b>.
+        Склонять их или нет, зависит от приложения.  В целях порождения текста имеет смысл генерировать 
+        современный несклоняемый вариант.  Для разбора текста не лишним будет учесть их возможную склоняемость.
+        Понять, что перед нами такая статья, можно по характерному окончанию леммы и по заглавной букве.
+        Заглавную букву необходимо учитывать, иначе можно зацепить такие слова как <b>вино, слово, марево.</b>
+    </p>
+
+    <h2>Другие открытые грамматические словари в Сети</h2>
+
+    <ul>
+        <li>Словарь А. А. Зализняка на <a href='http://starling.rinet.ru/downl.php?lan=ru'>сайте Сергея Старостина</a></li>
+        <li><a href='http://opencorpora.org/dict.php'>Словарь OpenCorpora</a></li>
+        <li><a href='http://ru.wiktionary.org/'>Викисловарь</a></li>
+    </ul>
+
+
     <h2>Подписаться на новости «Открытого словаря»: </h2>
 
     <p> Мы уведомим вас о новых крупных пополнениях словаря и улучшениях на сайте.
@@ -188,7 +176,6 @@
     <script type="text/javascript">
         var disqus_shortname = 'odict';
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
         (function () {
             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
