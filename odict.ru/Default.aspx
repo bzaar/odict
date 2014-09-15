@@ -44,7 +44,7 @@
 
     <ul class="columns">
         <li><a href="/add/">Пополнить словарь</a></li> 
-        <li><a href="download/odict.zip">Скачать словарь</a></li>
+        <li><asp:LinkButton runat="server" OnClick="DownloadButton_Click">Скачать словарь</asp:LinkButton></li>
     </ul>
 
     <div style="clear: both; height: 1px"></div>

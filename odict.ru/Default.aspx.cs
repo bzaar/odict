@@ -10,6 +10,15 @@ namespace odict.ru
 
         }
 
+        protected void DownloadButton_Click(object sender, EventArgs e)
+        {
+            Response.ContentType = "application/zip";
+            Response.AppendHeader ("Content-Disposition","attachment; filename=" + "odict.zip");
+            Response.WriteFile (Server.MapPath ("~/download/odict.zip"));
+
+            Email.SendAdminEmail ("oDict.ru: another download", "");
+        }
+
         protected void SubmitButton_Click(object sender, EventArgs e)
         {
             var mailMessage = new MailMessage
