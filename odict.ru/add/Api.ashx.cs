@@ -30,12 +30,14 @@ namespace odict.ru.add
             Context = HttpContext.Current;
         }
         
-        private static string[] GetFormsByRule(string rule)
+        private static string[] GetFormsByRule(string line)
         {
             try
             {
-                return FormGenerator.GetAccentedForms(rule, delegate { })
-                    .Select(Func => HttpUtility.HtmlEncode(Func.AccentedForm)).ToArray();
+                return FormGenerator.GetAccentedForms(line, delegate { })
+                    .Select (wordForm => wordForm.AccentedForm)
+                    .Select (HttpUtility.HtmlEncode)
+                    .ToArray();
             }
             catch (Exception exp)
             {
