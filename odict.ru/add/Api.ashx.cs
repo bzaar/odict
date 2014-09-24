@@ -34,7 +34,7 @@ namespace odict.ru.add
         {
             try
             {
-                return FormGenerator.GetAccentedForms(line, delegate { })
+                return FormGenerator.GetAccentedFormsWithCorrectCase (line, delegate { })
                     .Select (wordForm => wordForm.AccentedForm)
                     .Select (HttpUtility.HtmlEncode)
                     .ToArray();
@@ -56,11 +56,11 @@ namespace odict.ru.add
 
             string GramInfo = rule.Substring(0, rule.IndexOf(DictionaryHelper.RuleLineDelimiter));
 
-            string Line = DictionaryHelper.RemoveStressMarks(lemma).ToLowerInvariant() + " " + 
+            string Line = DictionaryHelper.RemoveStressMarks(lemma)  + " " + 
                 (StressPos == -1 ? "?" : StressPos.ToString()) + GramInfo.Substring(GramInfo.IndexOf(' '));
 
             WriteJSONToResponse(new LineForms
-                                    {
+                {
                     Line = Line,
                     Forms = GetFormsByRule(Line)
                 });
