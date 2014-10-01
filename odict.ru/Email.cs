@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System.Diagnostics;
+using System.Net.Mail;
 
 namespace odict.ru
 {
@@ -6,7 +7,10 @@ namespace odict.ru
     {
         public static void SendAdminEmail (string subject, string plainTextBody)
         {
-            new SmtpClient ().Send (new MailMessage ("robot@odict.ru", "ss@odict.ru", subject, plainTextBody));
+            if (!Debugger.IsAttached)
+            {
+                new SmtpClient ().Send (new MailMessage ("robot@odict.ru", "ss@odict.ru", subject, plainTextBody));
+            }
         }
     }
 }

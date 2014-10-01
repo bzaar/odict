@@ -35,29 +35,72 @@ namespace odict.ru
 
         public void UpdateIndices ()
         {
-            UpdateIndex (forwardDawg, DawgBuilder.BuildForward);
-            UpdateIndex (reverseDawg, DawgBuilder.BuildReverse);
+            UpdateForwardIndex ();
+            UpdateReverseIndex ();
             UpdateZip ();
+        }
+
+        public void UpdateForwardIndex ()
+        {
+            UpdateIndex (forwardDawg, DawgBuilder.BuildForward);
+        }
+
+        public void UpdateReverseIndex ()
+        {
+            UpdateIndex (reverseDawg, DawgBuilder.BuildReverse);
         }
 
         void UpdateIndex (string filename, Action <IEnumerable <KeyValuePair <string, string>>, string> rebuild)
         {
             UpdateFile (filename,
-                        () =>
+                        tmpFilePath =>
                         rebuild (
                             DawgBuilder.GetZalizniak (File.ReadAllLines (ZalizniakFilePath, zalizniakFileEncoding)),
-                            CombinePath (filename)));
+                            tmpFilePath));
         }
 
-        void UpdateFile (string filename, Action rebuild)
+        void UpdateFile (string filename, Action <string> rebuild)
         {
             string filePath = CombinePath (filename);
 
+            string tmpFilePath = filePath + Guid.NewGuid () + ".tmp";
+
             if (!File.Exists (filePath) || File.GetLastWriteTime (ZalizniakFilePath) > File.GetLastWriteTime (filePath))
             {
-                new Task (rebuild).Start ();
+                new Task (() => 
+                {
+                    try
+                    {
+                        rebuild (tmpFilePath);
+
+                        MoveAndReplace (tmpFilePath, filePath);
+                    }
+                    catch (Exception e)
+                    {
+                        Email.SendAdminEmail ("Index update failed", e.ToString ());
+                    }
+                })
+                .Start ();
             }
         }
+
+        // .NET does not provide a File.MoveAndReplace method.
+        // This tries to simulate such in an atomic way.
+        // It may fail in a webfarm scenario (although chances are pretty slim).
+        private static void MoveAndReplace (string srcFilePath, string dstFilePath)
+        {
+            lock (fileSystemLock)
+            {
+                if (File.Exists (dstFilePath))
+                {
+                    File.Delete (dstFilePath);
+                }
+
+                File.Move (srcFilePath, dstFilePath);
+            }
+        }
+
+        static readonly object fileSystemLock = new object ();
 
         public Stream OpenForwardIndex ()
         {
@@ -88,12 +131,12 @@ namespace odict.ru
         {
             string zipFile = server.MapPath(zipPath);
 
-            UpdateFile (zipFile, () => 
+            UpdateFile (zipFile, tmpFilePath => 
                 {
                      using (var zip = new ZipFile())
                      {
                          zip.AddFile(ZalizniakFilePath, "");
-                         zip.Save(zipFile);
+                         zip.Save(tmpFilePath);
                      }
                 }
             );

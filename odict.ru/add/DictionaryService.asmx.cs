@@ -19,9 +19,11 @@ namespace odict.ru.add
         [System.Web.Script.Services.ScriptMethod]
         public string [] GetCompletionList (string prefixText, int count)
         {
+            var fileBasedDictionary = new FileBasedDictionary(Server);
+
             try
             {
-                using (Stream ForwardDict = new FileBasedDictionary(Server).OpenForwardIndex())
+                using (Stream ForwardDict = fileBasedDictionary.OpenForwardIndex())
                 {
                     var dict = DawgSharp.Dawg<bool>.Load(ForwardDict, r => r.ReadBoolean());
 
@@ -30,7 +32,11 @@ namespace odict.ru.add
             }
             catch (Exception exp)
             {
-                return new string[] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." };//exp.Message };
+                fileBasedDictionary.UpdateForwardIndex();
+
+                Email.SendAdminEmail ("GetCompletionList", exp.ToString ());
+
+                return new string[] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." };
             }
         }
     }

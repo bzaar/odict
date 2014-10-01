@@ -71,9 +71,11 @@ namespace odict.ru.add
             Dawg<string> Dawg;
             var PrefixText = DictionaryHelper.RemoveStressMarks(prefixText).ToLowerInvariant ().Reverse();
             
+            var fileBasedDictionary = new FileBasedDictionary(Context.Server);
+
             try
             {
-                using (Stream ReverseDict = new FileBasedDictionary(Context.Server).OpenReverseIndex())
+                using (Stream ReverseDict = fileBasedDictionary.OpenReverseIndex())
                 {
                     Dawg = Dawg<string>.Load(ReverseDict,
                         Func =>
@@ -92,9 +94,14 @@ namespace odict.ru.add
                     .Take(10)
                     .ToArray());
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                WriteJSONToResponse(new [] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." });//exp.Message });
+                fileBasedDictionary.UpdateReverseIndex ();
+
+                Email.SendAdminEmail ("GetRules", e.ToString ());
+
+                WriteJSONToResponse(new [] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." });
+
                 return;
             }
         }
