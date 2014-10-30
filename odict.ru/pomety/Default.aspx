@@ -7,6 +7,10 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
+        #pomety
+        {
+            margin-top: 2em;
+        }
         #pomety tr td a
         {
             text-decoration: none;
@@ -30,30 +34,40 @@
         {
             content: "!"
         }
+        .circle:before
+        {
+            content: '"'
+        }
+        .circle:after
+        {
+            content: '"'
+        }
     </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <table id="pomety">
+
+    <h1>Значения помет</h1>
+
+    <table id="pomety" cellspacing="0" cellpadding="0">
         <tr>
             <td>У существительных</td>
             <td><a href="#noun-minus">—</a></td>
             <td><a href="#noun-p2">П<sub>2</sub></a></td>
             <td><a href="#noun-r2">Р<sub>2</sub></a></td>
-            <td>
-                <a href="#para1">§1</a>
-                <a href="#para2">§2</a>
-                <a href="#para3">§3</a>
-                <a href="#para4">§4</a>
-                <a href="#para5">§5</a>
-                <a href="#para6">§6</a>
-                <a href="#para7">§7</a>
-                <a href="#para8">§8</a>
-                <a href="#para9">§9</a>
-                <a href="#para10">§10</a>
-                <a href="#para11">§11</a>
-                <a href="#para12">§12</a>
-            </td>
+            <td>&nbsp;</td>
+            <td><a href="#para1">§1</a></td>
+            <td><a href="#para2">§2</a></td>
+            <td><a href="#para3">§3</a></td>
+            <td><a href="#para4">§4</a></td>
+            <td><a href="#para5">§5</a></td>
+            <td><a href="#para6">§6</a></td>
+            <td><a href="#para7">§7</a></td>
+            <td><a href="#para8">§8</a></td>
+            <td><a href="#para9">§9</a></td>
+            <td><a href="#para10">§10</a></td>
+            <td><a href="#para11">§11</a></td>
+            <td><a href="#para12">§12</a></td>
         </tr>
         <tr>
             <td>У прилагательных</td>
@@ -64,10 +78,18 @@
         </tr>
         <tr>
             <td>У глаголов</td>
-            <td><a href="#verb-minus">—</a></td>
+            <td>&nbsp;</td>
             <td><a href="#verb-cross"><span class="cross"/></a></td>
             <td><a href="#verb-boxed-cross"><span class="boxed-cross"/></a></td>
             <td><a href="#verb-yo">ё</a></td>
+            <td><a href="#verb-circle-1"><span class="circle">1</span></a></td>
+            <td><a href="#verb-circle-2"><span class="circle">2</span></a></td>
+            <td><a href="#verb-circle-3"><span class="circle">3</span></a></td>
+            <td><a href="#verb-circle-4"><span class="circle">4</span></a></td>
+            <td><a href="#verb-circle-5"><span class="circle">5</span></a></td>
+            <td><a href="#verb-circle-6"><span class="circle">6</span></a></td>
+            <td><a href="#verb-circle-7"><span class="circle">7</span></a></td>
+            <td><a href="#verb-circle-8"><span class="circle">8</span></a></td>
         </tr>
     </table>
 
@@ -75,9 +97,7 @@
 
     <a name="noun-minus"></a>
 
-    <h4> ЗНАК — (МИНУС) </h4>
-
-    <h5>(<em>у существительных</em>)</h5>
+    <h4> ЗНАК — (МИНУС) у существительных</h4>
 
     <p>
 
@@ -127,11 +147,9 @@
 
     </p>
 
-    <a name="adj-minus"></a>
+<a name="adj-minus"></a>
 
-    <h4><em>(у прилагательных) </em>
-
-</h4>
+<h4> ЗНАК — (МИНУС) у прилагательных</h4>
 
 <p>
 
@@ -2259,6 +2277,8 @@
 
 </p>
 
+<a name="verb-circle-1"></a>
+
 <h5>
 
     <strong>Помета </strong><span class="circle">1</span>
@@ -2325,6 +2345,8 @@
 св 11b / с <span class="circle">1</span> — <em>прош. </em>на́ли́л, налила́, на́лило́, на́ли́ли; <em>прич. страд.</em> на́ли́тый, <em>кф</em> на́ли́т, налита́, на́лито́, на́ли́ты;    <em>прич. прош.</em> нали́вший, <em>деепр. прош. </em>нали́в(ши)
 
 </blockquote>
+
+<a name="verb-circle-2"></a>
 
 <h5>
 
@@ -2424,16 +2446,11 @@
 
 </p>
 
-<h5>
+<a name="verb-circle-4"></a>
 
-    <strong>Помета </strong><span class="circle">4</span>
+<h5> <strong>Помета </strong><span class="circle">4</span> </h5>
 
-</h5>
-
-<p>
-
-    Помета <span class="circle">4</span> относится к ударению в прич. наст. Она означает, что ударение в этой форме падает на один слог левее, чем ожидается по правилу. Примеры:
-
+<p> Помета <span class="circle">4</span> относится к ударению в прич. наст. Она означает, что ударение в этой форме падает на один слог левее, чем ожидается по правилу. Примеры:
 </p>
 
 <p>
@@ -2454,7 +2471,7 @@
 
 <p>
 
-    Пример с пометой<span class="circle">4</span>:
+    Пример с пометой [<span class="circle">4</span>]:
 
 </p>
 
@@ -2462,13 +2479,16 @@
 
     <strong>вари́ть </strong>
 
-    нсв 4с<span class="circle">4</span> — <em>прич. наст. </em>варя́щий // ва́рящий
+    нсв 4с[<span class="circle">4</span>] — <em>прич. наст. </em>варя́щий // ва́рящий
 
 </p>
 
+<a name="verb-circle-5"></a>
+<a name="verb-circle-6"></a>
+
 <h5>
 
-    <strong>Пометы<span class="circle">5</span> и<span class="circle">4</span></strong>
+    <strong>Пометы <span class="circle">5</span> и <span class="circle">6</span></strong>
 
 </h5>
 
@@ -2476,7 +2496,7 @@
 
     Эти две пометы относятся к образованию прош. времени и прич. прош. в подтипе 3°. Помета <span class="circle">5</span> означает, что в прош. м суффикс <strong>-ну-</strong> сохраняется
 
-    (вопреки общему правилу о подтипе 3°). Помета <span class="circle">6</span>означает, что в прич. прош. и деепр. прош. суф­фикс <strong>-ну- </strong>сохраняется (вопреки правилу).
+    (вопреки общему правилу о подтипе 3°). Помета <span class="circle">6</span> означает, что в прич. прош. и деепр. прош. суф­фикс <strong>-ну- </strong>сохраняется (вопреки правилу).
 
     Примеры различных комбинаций этих двух помет:
 
@@ -2522,9 +2542,12 @@
 
 </p>
 
+<a name="verb-circle-7"></a>
+<a name="verb-circle-8"></a>
+
 <h5>
 
-    <strong>Пометы <span class="circle">7</span>и<span class="circle">8</span></strong>
+    <strong>Пометы <span class="circle">7</span> и <span class="circle">8</span></strong>
 
 </h5>
 
@@ -2607,6 +2630,8 @@
     св 4b<span class="circle">8</span>— <em>прич. страд. </em>разгромлённый // разгро́мленный
 
 </p>
+
+<a name="verb-circle-9"></a>
 
 <h5>
 
@@ -2852,7 +2877,7 @@
 
 </blockquote>
 
-<h5>
+<%--<h5>
 
     <strong>ПОСТРОЕНИЕ ГЛАГОЛЬНЫХ ФОРМ ПО ИНДЕКСУ</strong>
 
@@ -2881,7 +2906,7 @@
     (поскольку все эти глаголы непереходны).
 
 </p>
-
+--%>
 <p class="footnote">
 
     <sup>1 </sup>
@@ -2945,6 +2970,11 @@
 
                                                 а) Приставочные глаголы несовершенного вида,  не входящие в видовые пары,  например,  <strong>порица́ть,  пока́чивать,  сознава́ть.</strong></p>
 
+                                    <blockquote>
+                                        <b>Примечание (Сергей Слепов):</b> для этой группы глаголов вполне возможно образование прич. страд. <i>настоящего времени</i>:
+                                        <b>порицаемый, покачиваемый, сознаваемый</b>.
+                                    </blockquote>
+
                                 <p>
 
                                                 б) Многократные глаголы,  например,  <strong>пи́сывать</strong>.</p>
@@ -2960,6 +2990,7 @@
                                 <p>
 
                                                 д) Значительная часть глаголов на <strong>-еть,  </strong>а также глаголов II спряжения на <strong>-ать,  </strong>например,  <strong>разгляде́ть,  облете́ть,  пробежа́ть.</strong></p>
+
 
                                 <h4>
 
@@ -3541,7 +3572,7 @@
 
                                                                                                 <p>
 
-                                                                                                                <strong>-тыватьà-сть</strong></p>
+                                                                                                                <strong>-тывать à-сть</strong></p>
 
                                                                                                
 
@@ -3551,7 +3582,7 @@
 
                                                                                                 <p>
 
-                                                                                                                <strong>-быватьà-сть</strong></p>
+                                                                                                                <strong>-бывать à-сть</strong></p>
 
                                                                                                 <p>
 
