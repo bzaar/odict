@@ -42,11 +42,15 @@ namespace odict.ru
 
                 new SmtpClient ().Send (mailMessage);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 this.BadEmailLabel.Visible = true;
+                this.BadEmailLabel.Text += " " + ex.Message;
                 return;
             }
+
+            this.SubscribedLabel.Visible = true;
+            this.EmailTextBox.Text = string.Empty;
 
             Email.SendAdminEmail ("oDict.ru New Subscriber", email);
 
@@ -60,8 +64,6 @@ namespace odict.ru
 
                 db.SaveChanges ();
             }
-
-            Response.Redirect ("download/");
         }
     }
 }

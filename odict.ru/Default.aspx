@@ -1,6 +1,10 @@
 ﻿<%@ Page Title="Открытый грамматический словарь русского языка – oDict.ru" 
-    Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
-    CodeBehind="Default.aspx.cs" Inherits="odict.ru._Default" MaintainScrollPositionOnPostback="true" %>
+    Language="C#" 
+    MasterPageFile="~/Site.master" 
+    AutoEventWireup="true"
+    CodeBehind="Default.aspx.cs" 
+    Inherits="odict.ru._Default" 
+    MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
     <style type="text/css">
@@ -173,6 +177,9 @@
             <p>
                 <asp:Label runat="server" ID="BadEmailLabel" Visible="false" EnableViewState="false" ForeColor="Red">
                     Не удалось отправить вам имейл. Проверьте правильность адреса.
+                </asp:Label>
+                <asp:Label runat="server" ID="SubscribedLabel" Visible="false" EnableViewState="false" ForeColor="Green">
+                    Вы подписаны.
                 </asp:Label>
             </p>
         </div>
