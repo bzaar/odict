@@ -31,7 +31,6 @@ namespace odict.ru
         private readonly Encoding zalizniakFileEncoding = Encoding.GetEncoding (1251);
         private const string forwardDawg = "forward.dawg";
         private const string reverseDawg = "reverse.dawg";
-        private const string zipPath = "~/download/odict.zip";
 
         public void UpdateIndices ()
         {
@@ -129,17 +128,28 @@ namespace odict.ru
 
         public void UpdateZip ()
         {
-            string zipFile = server.MapPath(zipPath);
+            string zipFile = server.MapPath("~/download/odict.zip");
 
-            UpdateFile (zipFile, tmpFilePath => 
-                {
-                     using (var zip = new ZipFile())
-                     {
-                         zip.AddFile(ZalizniakFilePath, "");
-                         zip.Save(tmpFilePath);
-                     }
-                }
-            );
+            UpdateFile (zipFile, new ZipArchive (ZalizniakFilePath).ZipSingleFile);
+        }
+    }
+
+    class ZipArchive 
+    {
+        private readonly string filename;
+
+        public ZipArchive (string filename)
+        {
+            this.filename = filename;
+        }
+
+        public void ZipSingleFile (string tmpFilePath)
+        {
+            using (var zip = new ZipFile())
+            {
+                zip.AddFile(filename, "");
+                zip.Save(tmpFilePath);
+            }
         }
     }
 }
