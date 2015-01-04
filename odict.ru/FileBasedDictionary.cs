@@ -168,13 +168,15 @@ namespace odict.ru
             this.filename = filename;
         }
 
-        public void ZipSingleFile (string tmpFilePath)
+        public void ZipSingleFile (string zipFilePath)
         {
             using (var zip = new ZipFile())
             {
                 zip.AddFile(filename, "");
-                zip.Save(tmpFilePath);
+                zip.Save(zipFilePath);
             }
+
+            File.SetLastWriteTime (zipFilePath, File.GetLastWriteTime (filename));
         }
     }
 }
