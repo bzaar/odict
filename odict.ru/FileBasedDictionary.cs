@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Ionic.Zip;
+using Slepov.Russian;
+using Zalizniak;
 
 namespace odict.ru
 {
@@ -37,6 +40,7 @@ namespace odict.ru
             UpdateForwardIndex ();
             UpdateReverseIndex ();
             UpdateZip ();
+            UpdateWordFormsZip ();
         }
 
         public void UpdateForwardIndex ()
@@ -76,7 +80,7 @@ namespace odict.ru
                     }
                     catch (Exception e)
                     {
-                        Email.SendAdminEmail ("Index update failed", e.ToString ());
+                        Email.SendAdminEmail ("File update failed: " + filename, e.ToString ());
                     }
                 })
                 .Start ();
@@ -131,6 +135,27 @@ namespace odict.ru
             string zipFile = server.MapPath("~/download/odict.zip");
 
             UpdateFile (zipFile, new ZipArchive (ZalizniakFilePath).ZipSingleFile);
+        }
+        
+        public void UpdateWordFormsZip ()
+        {
+            string zipFile = server.MapPath("~/download/wordforms.zip");
+            string txtFile = server.MapPath("~/download/wordforms.txt");
+
+            UpdateFile (zipFile, tmpFilePath => 
+                {
+                    var wordforms = File.ReadAllLines (ZalizniakFilePath, Encoding.GetEncoding (1251))
+                        .AsParallel ()
+                        .Select (line => FormGenerator.GetAccentedForms (line, delegate {}))
+                        .SelectMany (forms => forms)
+                        .Select (form => Stress.StripStressMarksAndYo (form.AccentedForm))
+                        .OrderBy (form => form, StringComparer.Ordinal)
+                        .Distinct ();
+                            
+                    File.WriteAllLines (txtFile, wordforms);
+
+                    new ZipArchive (txtFile).ZipSingleFile (tmpFilePath);
+                });
         }
     }
 
