@@ -9,12 +9,14 @@ namespace odict.ru
         {
             var dictionary = new FileBasedDictionary (Server);
 
-            dictionary.UpdateIndices ();
-
             if (!dictionary.FileExists ())
             {
                 throw new Exception ("App_Data/zalizniak.txt is missing.");
             }
+
+            dictionary.UpdateIndices ();
+
+            new SchedulerTask (dictionary.UpdateFiles, TimeSpan.FromMinutes (2), TimeSpan.FromMinutes (1));
         }
 
         protected void Session_Start(object sender, EventArgs e)

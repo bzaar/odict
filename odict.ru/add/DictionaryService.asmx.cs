@@ -5,9 +5,6 @@ using System.Web.Services;
 
 namespace odict.ru.add
 {
-    /// <summary>
-    /// Summary description for DictionaryService
-    /// </summary>
     [WebService (Namespace = "http://odict.ru/")]
     [WebServiceBinding (ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem (false)]
@@ -30,13 +27,11 @@ namespace odict.ru.add
                     return dict.MatchPrefix(DictionaryHelper.RemoveStressMarks(prefixText).ToLowerInvariant()).Take(10).Select(kvp => kvp.Key).ToArray();
                 }
             }
-            catch (Exception exp)
+            catch (Exception exception)
             {
-                fileBasedDictionary.UpdateForwardIndex();
+                Email.SendAdminEmail ("GetCompletionList", exception.ToString ());
 
-                Email.SendAdminEmail ("GetCompletionList", exp.ToString ());
-
-                return new string[] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." };
+                return new [] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." };
             }
         }
     }

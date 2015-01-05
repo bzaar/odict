@@ -9,9 +9,6 @@ using Zalizniak;
 
 namespace odict.ru.add
 {
-    /// <summary>
-    /// Summary description for Api
-    /// </summary>
     public class Api : IHttpHandler
     {
         [DataContract]
@@ -96,13 +93,9 @@ namespace odict.ru.add
             }
             catch (Exception e)
             {
-                fileBasedDictionary.UpdateReverseIndex ();
-
-                Email.SendAdminEmail ("GetRules", e.ToString ());
-
                 WriteJSONToResponse(new [] { "Доступ к словарю в данный момент отсутствует. Возможно происходит построение индексов." });
-
-                return;
+              
+                Email.SendAdminEmail ("GetRules", e.ToString ());
             }
         }
 

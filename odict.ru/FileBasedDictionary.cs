@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using Ionic.Zip;
 using Slepov.Russian;
@@ -16,41 +15,51 @@ namespace odict.ru
         public FileBasedDictionary (HttpServerUtility server)
         {
             this.server = server;
+
+            this.filesToRebuild = new Dictionary <string, Action> {
+                {forwardDawgAppRelativePath, UpdateForwardIndex},
+                {reverseDawgAppRelativePath, UpdateReverseIndex},
+                {odictZipAppRelativePath, UpdateZip},
+                {wordformsZipAppRelativePath, UpdateWordFormsZip}
+            };
         }
+
+        readonly Dictionary <string, Action> filesToRebuild;
 
         public void AddEntry (string entry)
         {
             File.AppendAllLines (ZalizniakFilePath, new [] { entry }, zalizniakFileEncoding);
         }
 
-        public string ZalizniakFilePath { get { return CombinePath ("zalizniak.txt"); } }
+        string ZalizniakFilePath { get { return MapPath ("~/App_Data/zalizniak.txt"); } }
 
-        private string CombinePath (string filename)
+        private string MapPath (string appRelativePath)
         {
-            return Path.Combine (server.MapPath ("~/App_Data"), filename);
+            return server.MapPath (appRelativePath);
         }
 
         private readonly HttpServerUtility server;
         private readonly Encoding zalizniakFileEncoding = Encoding.GetEncoding (1251);
-        private const string forwardDawg = "forward.dawg";
-        private const string reverseDawg = "reverse.dawg";
+
+        private const string forwardDawgAppRelativePath  = "~/App_Data/forward.dawg";
+        private const string reverseDawgAppRelativePath  = "~/App_Data/reverse.dawg";
+        private const string wordformsZipAppRelativePath = "~/download/wordforms.zip";
+        private const string odictZipAppRelativePath     = "~/download/odict.zip";
 
         public void UpdateIndices ()
         {
             UpdateForwardIndex ();
             UpdateReverseIndex ();
-            UpdateZip ();
-            UpdateWordFormsZip ();
         }
 
-        public void UpdateForwardIndex ()
+        void UpdateForwardIndex ()
         {
-            UpdateIndex (forwardDawg, DawgBuilder.BuildForward);
+            UpdateIndex (forwardDawgAppRelativePath, DawgBuilder.BuildForward);
         }
 
-        public void UpdateReverseIndex ()
+        void UpdateReverseIndex ()
         {
-            UpdateIndex (reverseDawg, DawgBuilder.BuildReverse);
+            UpdateIndex (reverseDawgAppRelativePath, DawgBuilder.BuildReverse);
         }
 
         void UpdateIndex (string filename, Action <IEnumerable <KeyValuePair <string, string>>, string> rebuild)
@@ -64,26 +73,15 @@ namespace odict.ru
 
         void UpdateFile (string filename, Action <string> rebuild)
         {
-            string filePath = CombinePath (filename);
+            string filePath = MapPath (filename);
 
             string tmpFilePath = filePath + Guid.NewGuid () + ".tmp";
 
             if (!File.Exists (filePath) || File.GetLastWriteTime (ZalizniakFilePath) > File.GetLastWriteTime (filePath))
             {
-                new Task (() => 
-                {
-                    try
-                    {
-                        rebuild (tmpFilePath);
+                rebuild (tmpFilePath);
 
-                        MoveAndReplace (tmpFilePath, filePath);
-                    }
-                    catch (Exception e)
-                    {
-                        Email.SendAdminEmail ("File update failed: " + filename, e.ToString ());
-                    }
-                })
-                .Start ();
+                MoveAndReplace (tmpFilePath, filePath);
             }
         }
 
@@ -107,17 +105,17 @@ namespace odict.ru
 
         public Stream OpenForwardIndex ()
         {
-            return OpenIndex (forwardDawg);
+            return OpenIndex (forwardDawgAppRelativePath);
         }
 
         public Stream OpenReverseIndex ()
         {
-            return OpenIndex (reverseDawg);
+            return OpenIndex (reverseDawgAppRelativePath);
         }
 
-        private Stream OpenIndex (string filename)
+        private Stream OpenIndex (string appRelativeFilePath)
         {
-            return SharedOpenDictionary(CombinePath (filename));
+            return SharedOpenDictionary(MapPath (appRelativeFilePath));
         }
 
         static Stream SharedOpenDictionary(string fullFileName)
@@ -130,19 +128,16 @@ namespace odict.ru
             return File.Exists (ZalizniakFilePath);
         }
 
-        public void UpdateZip ()
+        void UpdateZip ()
         {
-            string zipFile = server.MapPath("~/download/odict.zip");
-
-            UpdateFile (zipFile, new ZipArchive (ZalizniakFilePath).ZipSingleFile);
+            UpdateFile (odictZipAppRelativePath, new ZipArchive (ZalizniakFilePath).ZipSingleFile);
         }
         
-        public void UpdateWordFormsZip ()
+        void UpdateWordFormsZip ()
         {
-            string zipFile = server.MapPath("~/download/wordforms.zip");
             string txtFile = server.MapPath("~/download/wordforms.txt");
 
-            UpdateFile (zipFile, tmpFilePath => 
+            UpdateFile (wordformsZipAppRelativePath, tmpFilePath => 
                 {
                     var wordforms = File.ReadAllLines (ZalizniakFilePath, Encoding.GetEncoding (1251))
                         .AsParallel ()
@@ -156,6 +151,37 @@ namespace odict.ru
 
                     new ZipArchive (txtFile).ZipSingleFile (tmpFilePath);
                 });
+        }
+
+        public void UpdateFiles ()
+        {
+            foreach (var file in filesToRebuild)
+            {
+                string fullFilePath = MapPath (file.Key);
+
+                var fileTime = File.Exists (fullFilePath) ? File.GetLastWriteTime (fullFilePath) : (DateTime.Now - TimeSpan.FromDays (1));
+
+                var zalFileTime = File.GetLastWriteTime (ZalizniakFilePath);
+
+                var diff = zalFileTime - fileTime;
+
+                var now = DateTime.Now;
+
+                if (diff > TimeSpan.FromHours (1) || (diff > TimeSpan.FromMinutes (5) && (now - zalFileTime) > TimeSpan.FromMinutes (5)))
+                {
+                    try
+                    {
+                        file.Value (); // go update the file
+
+                        // Set the time stamp for the generated file to the same as the source file.
+                        File.SetLastWriteTime (fullFilePath, zalFileTime);
+                    }
+                    catch (Exception e)
+                    {
+                        Email.SendAdminEmail ("File update failed: " + file.Key, e.ToString ());
+                    }
+                }
+            }
         }
     }
 
@@ -175,8 +201,6 @@ namespace odict.ru
                 zip.AddFile(filename, "");
                 zip.Save(zipFilePath);
             }
-
-            File.SetLastWriteTime (zipFilePath, File.GetLastWriteTime (filename));
         }
     }
 }
