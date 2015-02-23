@@ -1,0 +1,1 @@
+ODict is a grammatical dictionary of Russian that builds upon and extends Zalizniak's morphology model and dictionary format.  The website http://odict.ru hosts the dictionary and provides tools for contributing new words: http://odict.ru/add.
