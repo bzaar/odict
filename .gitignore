@@ -34,14 +34,14 @@ Icon
 .Spotlight-V100
 .Trashes
 
-odict.ru/bin
-odict.ru/obj
+**/bin/
+**/obj/
 _ReSharper.ODict
 odict.ru/Web.Debug.config
 odict.ru/Web.Release.config
 XMLFile1.xml
 odict.ru/odict.ru.Publish.xml
-odict.ru/download/odict.zip
+odict.ru/download/
 packages
 *.suo
 odict.ru/odict.ru.csproj.user
@@ -53,3 +53,4 @@ odict.ru/App_Data
 ~$oDict.docx
 odict.ru/download/wordforms.zip
 odict.ru/download/wordforms.txt
+*.user

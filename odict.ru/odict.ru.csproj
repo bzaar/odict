@@ -93,6 +93,7 @@
     <Content Include="add\Images\add-submit-button.png" />
     <Content Include="add\Api.ashx" />
     <None Include="EmailTemplate.htm" />
+    <Content Include="format\Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="pomety\Default.aspx" />
     <Content Include="Scripts\autosuggest2.js" />
@@ -147,6 +148,13 @@
     <Compile Include="Email.cs" />
     <Compile Include="FileBasedDictionary.cs" />
     <Compile Include="DbContext.cs" />
+    <Compile Include="format\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="format\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

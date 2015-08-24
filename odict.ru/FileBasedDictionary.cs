@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using Ionic.Zip;
 using Slepov.Russian;
+using Slepov.Russian.Зализняк;
 using Zalizniak;
 
 namespace odict.ru
@@ -20,7 +21,8 @@ namespace odict.ru
                 {forwardDawgAppRelativePath, UpdateForwardIndex},
                 {reverseDawgAppRelativePath, UpdateReverseIndex},
                 {odictZipAppRelativePath, UpdateZip},
-                {wordformsZipAppRelativePath, UpdateWordFormsZip}
+                {wordformsZipAppRelativePath, UpdateWordFormsZip},
+                {csvZipAppRelativePath, UpdateCsvZip}
             };
         }
 
@@ -45,6 +47,7 @@ namespace odict.ru
         private const string reverseDawgAppRelativePath  = "~/App_Data/reverse.dawg";
         private const string wordformsZipAppRelativePath = "~/download/wordforms.zip";
         private const string odictZipAppRelativePath     = "~/download/odict.zip";
+        private const string csvZipAppRelativePath       = "~/download/odict.csv.zip";
 
         public void UpdateIndices ()
         {
@@ -141,7 +144,7 @@ namespace odict.ru
                 {
                     var wordforms = File.ReadAllLines (ZalizniakFilePath, Encoding.GetEncoding (1251))
                         .AsParallel ()
-                        .Select (line => FormGenerator.GetAccentedForms (line, delegate {}))
+                        .Select (line => FormGenerator.GetAccentedForms (line, delegate {}).ToArray())
                         .SelectMany (forms => forms)
                         .Select (form => Stress.StripStressMarksAndYo (form.AccentedForm))
                         .OrderBy (form => form, StringComparer.Ordinal)
@@ -151,6 +154,47 @@ namespace odict.ru
 
                     new ZipArchive (txtFile).ZipSingleFile (tmpFilePath);
                 });
+        }
+
+        public void UpdateCsvZip ()
+        {
+            string txtFile = server.MapPath("~/download/odict.csv");
+
+            UpdateFile (csvZipAppRelativePath, tmpFilePath => 
+                {
+                    var wordforms = File.ReadAllLines (ZalizniakFilePath, Encoding.GetEncoding (1251))
+                        .AsParallel ()
+                        .Where(line => !string.IsNullOrEmpty(line))
+                        .Select (ExpandLine)
+                        .Where (line => line != null)
+                        .OrderBy (line => line);
+                            
+                    File.WriteAllLines (txtFile, wordforms, Encoding.GetEncoding(1251));
+
+                    new ZipArchive (txtFile).ZipSingleFile (tmpFilePath);
+                });
+        }
+
+        internal static string ExpandLine(string line)
+        {
+            var obj = new EntryParser(line).Parse();
+
+            var entry = obj as Статья;
+
+            if (entry == null) return null;
+
+            string lemma;
+            string symbol;
+            int[] secAccPos;
+            new EntryParser(line).ParseCommonPart(out lemma, out symbol, out secAccPos);
+
+            bool failed = false;
+            var forms = FormGenerator.GetAccentedFormsWithCorrectCase (line, delegate { failed = true; });
+
+            if (failed) return null;
+
+            return lemma + "," + symbol + "," + string.Join(",", forms
+                .Select (form => Stress.StripStressMarks (form.AccentedForm)));
         }
 
         public void UpdateFiles ()
@@ -171,6 +215,8 @@ namespace odict.ru
                 {
                     try
                     {
+                        Email.SendAdminEmail ("Updating " + file.Key, "Diff: " + diff);
+
                         file.Value (); // go update the file
 
                         // Set the time stamp for the generated file to the same as the source file.

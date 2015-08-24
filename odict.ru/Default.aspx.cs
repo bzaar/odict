@@ -12,11 +12,21 @@ namespace odict.ru
 
         protected void DownloadButton_Click(object sender, EventArgs e)
         {
-            Response.ContentType = "application/zip";
-            Response.AppendHeader ("Content-Disposition","attachment; filename=" + "odict.zip");
-            Response.WriteFile (Server.MapPath ("~/download/odict.zip"));
+            DownloadFile("odict.zip");
+        }
 
-            Email.SendAdminEmail ("oDict.ru: another download", "");
+        protected void DownloadButton2_Click(object sender, EventArgs e)
+        {
+            DownloadFile("odict.csv.zip");
+        }
+
+        private void DownloadFile(string fileName)
+        {
+            Response.ContentType = "application/zip";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + fileName);
+            Response.WriteFile(Server.MapPath("~/download/" + fileName));
+
+            Email.SendAdminEmail("oDict.ru: download " + fileName, "");
         }
 
         protected void SubmitButton_Click(object sender, EventArgs e)

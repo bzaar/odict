@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Mail;
 using System.Web.UI;
+using Zalizniak;
 
 namespace odict.ru.add
 {
@@ -48,9 +52,15 @@ namespace odict.ru.add
                     var fileBasedDictionary = new FileBasedDictionary (Server);
 
                     fileBasedDictionary.AddEntry (NewLine);
-                    fileBasedDictionary.UpdateIndices ();
 
-                    Email.SendAdminEmail ("Новая статья: " + NewLine, NewLine);
+                    if (!Debugger.IsAttached)
+                    {
+                        var mailinglist = "sergey@morpher.ru";
+
+                        new SmtpClient ().Send (new MailMessage ("robot@odict.ru", mailinglist, "Новая статья: " + NewLine, 
+                            string.Join (Environment.NewLine, FormGenerator.GetAccentedFormsWithCorrectCase (NewLine, delegate { })
+                                .Select (wordForm => wordForm.AccentedForm) )));
+                    }
                 }
 
                 message.Text = messageText;
