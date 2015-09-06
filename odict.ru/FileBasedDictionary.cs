@@ -160,19 +160,24 @@ namespace odict.ru
         {
             string txtFile = server.MapPath("~/download/odict.csv");
 
-            UpdateFile (csvZipAppRelativePath, tmpFilePath => 
-                {
-                    var wordforms = File.ReadAllLines (ZalizniakFilePath, Encoding.GetEncoding (1251))
-                        .AsParallel ()
-                        .Where(line => !string.IsNullOrEmpty(line))
-                        .Select (ExpandLine)
-                        .Where (line => line != null)
-                        .OrderBy (line => line);
-                            
-                    File.WriteAllLines (txtFile, wordforms, Encoding.GetEncoding(1251));
+            UpdateFile (csvZipAppRelativePath, tmpFilePath =>
+                                                   {
+                                                       GenerateCsv(ZalizniakFilePath, txtFile);
 
-                    new ZipArchive (txtFile).ZipSingleFile (tmpFilePath);
-                });
+                                                       new ZipArchive (txtFile).ZipSingleFile (tmpFilePath);
+                                                   });
+        }
+
+        internal static void GenerateCsv(string zalizniakFilePath, string outputFileName)
+        {
+            var wordforms = File.ReadAllLines (zalizniakFilePath, Encoding.GetEncoding (1251))
+                .AsParallel ()
+                .Where(line => !string.IsNullOrEmpty(line))
+                .Select (ExpandLine)
+                .Where (line => line != null)
+                .OrderBy (line => line);
+                            
+            File.WriteAllLines (outputFileName, wordforms, Encoding.GetEncoding(1251));
         }
 
         internal static string ExpandLine(string line)
@@ -193,7 +198,7 @@ namespace odict.ru
 
             if (failed) return null;
 
-            return lemma + "," + symbol + "," + string.Join(",", forms
+            return lemma + "," + symbol + "," + string.Join(",", forms.Skip(1)
                 .Select (form => Stress.StripStressMarks (form.AccentedForm)));
         }
 
