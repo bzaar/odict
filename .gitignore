@@ -54,3 +54,4 @@ odict.ru/App_Data
 odict.ru/download/wordforms.zip
 odict.ru/download/wordforms.txt
 *.user
+.vs/config/applicationhost.config
